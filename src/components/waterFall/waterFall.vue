@@ -51,7 +51,7 @@ function getClient() {
 function waterFall() {
   const pageWidth = getClient().width;
   const itemWidth = items.value[0].offsetWidth;
-  console.log(items.value[0].offsetWidth);
+  // console.log(items.value[0].offsetWidth);
 
   const columns = parseInt(pageWidth / (itemWidth + 5));
   const picList = [];
