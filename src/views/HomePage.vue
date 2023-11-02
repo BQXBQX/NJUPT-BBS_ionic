@@ -13,41 +13,92 @@
           </ion-button>
         </ion-buttons>
         <ion-title>
-          <div
-            style="
-              display: flex;
-              justify-content: space-around;
-              align-items: center;
-            "
-          >
-            <span>关注</span>
-            <span>发现</span>
-            <span>最新</span>
-          </div>
+          <ion-segment :value="segment" @ionChange="onSegmentChange">
+            <ion-segment-button value="0"> 最新</ion-segment-button>
+            <ion-segment-button value="1"> 推荐</ion-segment-button>
+            <ion-segment-button value="2"> 最新</ion-segment-button>
+          </ion-segment>
         </ion-title>
       </ion-toolbar>
     </ion-header>
+
     <ion-content>
-      <Waterfall
-        style="background: transparent"
-        :list="list"
-        :breakpoints="waterfallBreakpoints"
-        :animationDelay="100"
-        v-cloak
-      >
-        <template #item="{ item, url, index }">
-          <div class="card">
-            <LazyImg :url="url" />
-            <p class="text">这是具体内容 {{ index }}</p>
-          </div>
-        </template>
-      </Waterfall>
+      <swiper class="swiper-container" @swiper="onSwiper" :initialSlide="1">
+        <swiper-slide>
+          <ion-content>
+            <Waterfall
+              style="background: transparent"
+              :list="list"
+              :breakpoints="waterfallBreakpoints"
+              :animationDelay="100"
+              :delay="-1000"
+              :gutter="8"
+            >
+              <template #item="{ item, url, index }">
+                <div class="card">
+                  <LazyImg :url="url" />
+                  <p class="cardText">this is title {{ index }}</p>
+                </div>
+              </template>
+            </Waterfall>
+          </ion-content>
+        </swiper-slide>
+        <swiper-slide>
+          <ion-content
+            :scrollEvents="true"
+            ref="contentRef"
+            @ionScroll="handleScroll"
+          >
+            <div class="anchorFront"></div>
+            <Waterfall
+              style="background: transparent"
+              :list="list"
+              :breakpoints="waterfallBreakpoints"
+              :animationDelay="100"
+              :delay="-1000"
+              :gutter="8"
+            >
+              <template #item="{ item, url, index }">
+                <div class="card">
+                  <LazyImg :url="url" />
+                  <p class="cardText">this is title {{ index }}</p>
+                </div>
+              </template>
+            </Waterfall>
+            <div ref="anchorEnd"></div>
+          </ion-content>
+        </swiper-slide>
+        <swiper-slide>
+          <ion-content ref="contentRef">
+            <Waterfall
+              style="background: transparent"
+              :list="list"
+              :breakpoints="waterfallBreakpoints"
+              :animationDelay="100"
+              :delay="-1000"
+              :gutter="8"
+            >
+              <template #item="{ item, url, index }">
+                <div class="card">
+                  <LazyImg :url="url" />
+                  <p class="cardText">this is title {{ index }}</p>
+                </div>
+              </template>
+            </Waterfall>
+          </ion-content>
+        </swiper-slide>
+      </swiper>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { SwiperSlide, Swiper } from "swiper/vue";
+
+// Import Swiper styles
+import "swiper/css";
+
+import { Ref, onMounted, ref, watch, onBeforeUnmount } from "vue";
 import {
   IonPage,
   IonHeader,
@@ -57,11 +108,15 @@ import {
   IonButtons,
   IonIcon,
   IonContent,
+  IonSegment,
+  IonSegmentButton,
+  IonLabel,
 } from "@ionic/vue";
 import { searchOutline, addCircleOutline } from "ionicons/icons";
 // import waterFall from "../components/waterFall/waterFall.vue"
 import { LazyImg, Waterfall } from "vue-waterfall-plugin-next";
 import "vue-waterfall-plugin-next/dist/style.css";
+import { throttle } from "lodash";
 
 const list = ref([
   {
@@ -85,6 +140,48 @@ const list = ref([
   {
     src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
   },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
 ]);
 
 const waterfallBreakpoints = ref({
@@ -92,9 +189,102 @@ const waterfallBreakpoints = ref({
     rowPerView: 2,
   },
 });
+
+const swiperRef: any = ref();
+
+const activeIndex = ref(1);
+
+const segment: any = ref("1");
+
+const anchorEnd: any = ref(null);
+const anchorEndPosition: Ref<number> = ref(0);
+const contentRef: any = ref();
+
+const newUrlStore: Ref<Array> = ref([]);
+
+const onSwiper = (swiper: any) => {
+  swiperRef.value = swiper;
+  swiper.on("slideChange", function (event: any) {
+    activeIndex.value = event.activeIndex;
+  });
+};
+
+// watch()
+let scrollPosition = 0;
+
+const handleScroll = throttle(async (event) => {
+  const contentElement = contentRef.value.$el;
+  if (contentElement) {
+    const positionThresholdFetchDate = anchorEndPosition.value - 2000; // 触发位置的阈值
+    const positionThresholdRender = anchorEndPosition.value - 1000;
+
+    if (event.detail.scrollTop > scrollPosition) {
+      scrollPosition = event.detail.scrollTop;
+      // console.log("store",scrollPosition);
+    }
+    // console.log((scrollPosition > positionThresholdFetchDate) && (event.detail.scrollTop >= scrollPosition));
+
+    if (
+      scrollPosition > positionThresholdFetchDate &&
+      event.detail.scrollTop >= scrollPosition
+    ) {
+      fetch("https://picsum.photos/200")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("请求失败");
+          }
+          return response; // 获取二进制数据
+        })
+        .then((response) => {
+          // 在这里处理获取到的数据
+          newUrlStore.value.push({ src: response.url });
+          console.log("fetch");
+        })
+        .catch((error) => {
+          console.error("发生错误", error);
+          // 在这里处理错误
+        });
+    }
+    if (scrollPosition > positionThresholdRender) {
+      list.value = list.value.concat(newUrlStore.value);
+      newUrlStore.value = [];
+      console.log("render");
+    }
+  }
+}, 100);
+
+watch(activeIndex, () => {
+  segment.value = activeIndex.value.toString();
+});
+
+function onSegmentChange(event: any) {
+  const segmentIndex: any = event.detail.value;
+  swiperRef.value.slideTo(segmentIndex);
+}
+
+onMounted(async () => {
+  setTimeout(() => {
+    anchorEndPosition.value = anchorEnd.value.offsetTop;
+    console.log(anchorEndPosition.value);
+  }, 250);
+});
 </script>
 <style scoped>
-[v-cloak] {
-  display: none;
+.swiper {
+  height: 100%;
+}
+.card {
+  background: rgb(255, 255, 255, 0.05);
+  border-radius: 15px;
+}
+.cardText {
+  padding: 0 2vw 2vh 2vw;
+}
+.lazy__box {
+  border-radius: 15px 15px 0 0;
+}
+.anchor {
+  background-color: aqua;
+  width: 100%;
 }
 </style>

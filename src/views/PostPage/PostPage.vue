@@ -255,9 +255,11 @@ import {
 
 const dividerRef = <any>ref(null);
 
-function clickSilder() {
-  dividerRef.value.scrollIntoView({ behavior: "smooth" });
-}
+const handleScrollEnd = (event:any) => {
+  console.log("滚动结束");
+  console.log(event);
+  
+};
 </script>
 <style>
 .mySwiper {
