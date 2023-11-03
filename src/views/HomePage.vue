@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="secondary">
-          <ion-button>
+          <ion-button  @click="router.push('/search')">
             <ion-icon slot="icon-only" :icon="searchOutline"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -59,7 +59,7 @@
               :gutter="8"
             >
               <template #item="{ item, url, index }">
-                <div class="card">
+                <div class="card" @click="router.push('/post')">
                   <LazyImg :url="url" />
                   <p class="cardText">this is title {{ index }}</p>
                 </div>
@@ -117,6 +117,7 @@ import { searchOutline, addCircleOutline } from "ionicons/icons";
 import { LazyImg, Waterfall } from "vue-waterfall-plugin-next";
 import "vue-waterfall-plugin-next/dist/style.css";
 import { throttle } from "lodash";
+import router from "@/router";
 
 const list = ref([
   {
@@ -215,9 +216,8 @@ let scrollPosition = 0;
 const handleScroll = throttle(async (event) => {
   const contentElement = contentRef.value.$el;
   if (contentElement) {
-    const positionThresholdFetchDate = anchorEndPosition.value - 2000; // 触发位置的阈值
-    const positionThresholdRender = anchorEndPosition.value - 1000;
-
+    const positionThresholdFetchDate = anchorEndPosition.value - 1000; // 触发位置的阈值
+    const positionThresholdRender = anchorEndPosition.value - 500;
     if (event.detail.scrollTop > scrollPosition) {
       scrollPosition = event.detail.scrollTop;
       // console.log("store",scrollPosition);
@@ -238,20 +238,21 @@ const handleScroll = throttle(async (event) => {
         .then((response) => {
           // 在这里处理获取到的数据
           newUrlStore.value.push({ src: response.url });
+          //写入图片下载的逻辑
           console.log("fetch");
+          if (scrollPosition > positionThresholdRender) {
+            list.value = list.value.concat(newUrlStore.value);
+            newUrlStore.value = [];
+            console.log("render");
+          }
         })
         .catch((error) => {
           console.error("发生错误", error);
           // 在这里处理错误
         });
     }
-    if (scrollPosition > positionThresholdRender) {
-      list.value = list.value.concat(newUrlStore.value);
-      newUrlStore.value = [];
-      console.log("render");
-    }
   }
-}, 100);
+}, 200);
 
 watch(activeIndex, () => {
   segment.value = activeIndex.value.toString();

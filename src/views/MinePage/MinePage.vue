@@ -164,7 +164,11 @@
             </ion-button>
           </div>
         </div>
+
         <ion-list>
+          <ion-item-divider ref="dividerRef" :sticky="true" color="primary">
+            <ion-label>this is user message</ion-label>
+          </ion-item-divider>
           <ion-item>Item 1</ion-item>
           <ion-item>Item 2</ion-item>
           <ion-item>Item 3</ion-item>
@@ -186,13 +190,13 @@
           <ion-item>Item 19</ion-item>
           <ion-item>Item 20</ion-item>
         </ion-list>
-        
       </ion-content>
     </ion-page>
   </ion-page>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import {
   IonPage,
   IonContent,
@@ -208,6 +212,7 @@ import {
   IonMenu,
   IonButtons,
   IonLabel,
+  IonItemDivider,
 } from "@ionic/vue";
 import {
   settingsOutline,
@@ -219,6 +224,10 @@ import {
   golfOutline,
   handLeftOutline,
 } from "ionicons/icons";
+
+const dividerRef: any = ref(null);
+
+
 </script>
 
 <style scoped>

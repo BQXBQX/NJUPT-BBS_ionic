@@ -204,7 +204,7 @@
               class="footerIcon"
               :icon="chatbubbleEllipsesOutline"
               size="large"
-              @click="clickSilder"
+              @click="clickSlider"
             ></ion-icon>
             <span>57</span>
           </div>
@@ -255,11 +255,9 @@ import {
 
 const dividerRef = <any>ref(null);
 
-const handleScrollEnd = (event:any) => {
-  console.log("滚动结束");
-  console.log(event);
-  
-};
+function clickSlider() {
+  dividerRef.value.scrollIntoView({ behavior: "smooth" });
+}
 </script>
 <style>
 .mySwiper {

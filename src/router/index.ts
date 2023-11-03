@@ -6,6 +6,8 @@ import ChatPage from "../views/ChatPage/ChatPage.vue";
 import MinePage from "../views/MinePage/MinePage.vue";
 import showBottomTabs from "@/components/showBottomTabs.vue";
 import PostPage from "../views/PostPage/PostPage.vue"
+import SearchPage from "@/views/SearchPage/SearchPage.vue";
+
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -16,6 +18,11 @@ const routes: Array<RouteRecordRaw> = [
     path:"/post",
     name:"post",
     component: PostPage
+  },
+  {
+    path:"/search",
+    name:"search",
+    component: SearchPage
   },
   {
     path: "/",
