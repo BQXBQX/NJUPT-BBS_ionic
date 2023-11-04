@@ -138,6 +138,7 @@ ion-list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  gap: 2vw;
 }
 ion-icon {
   background: rgb(255, 255, 255, 0.3);
@@ -145,5 +146,8 @@ ion-icon {
   width: 40px;
   border-radius: 20px;
   padding: 5px;
+}
+ion-item{
+  width: 32vw;
 }
 </style>

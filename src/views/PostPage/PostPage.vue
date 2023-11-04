@@ -2,10 +2,9 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button default-href="home"></ion-back-button>
+        <ion-buttons slot="secondary">
+          <ion-back-button default-href="#"></ion-back-button>
         </ion-buttons>
-
         <ion-buttons slot="end"> concern </ion-buttons>
         <ion-buttons slot="end">
           <ion-icon
@@ -18,7 +17,7 @@
         </ion-buttons>
 
         <ion-avatar
-          slot="start"
+          slot="secondary"
           style="margin: 0 0 0 3vw; display: flex; align-items: center"
         >
           <img
@@ -252,6 +251,8 @@ import {
   thumbsUpOutline,
   heartOutline,
 } from "ionicons/icons";
+
+import router from "@/router";
 
 const dividerRef = <any>ref(null);
 

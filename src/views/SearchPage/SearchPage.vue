@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start">
+        <ion-buttons slot="secondary">
           <ion-back-button
             default-href="#"
             style="height: 52px"

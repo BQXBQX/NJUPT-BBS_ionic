@@ -37,7 +37,7 @@
           </ion-item>
         </ion-list>
         <ion-list lines="none" class="menuBottom">
-          <ion-item>
+          <ion-item  @click="router.push('/setting')">
             <ion-label
               class="ionLabel"
               style="
@@ -159,6 +159,7 @@
                 --background: rgb(255, 255, 255, 0.3);
                 min-height: 0;
               "
+              @click="router.push('/setting')"
             >
               <ion-icon :icon="settingsOutline" />
             </ion-button>
@@ -213,6 +214,8 @@ import {
   IonButtons,
   IonLabel,
   IonItemDivider,
+  IonModal,
+  IonInput
 } from "@ionic/vue";
 import {
   settingsOutline,
@@ -224,10 +227,13 @@ import {
   golfOutline,
   handLeftOutline,
 } from "ionicons/icons";
+import router from "@/router";
 
 const dividerRef: any = ref(null);
 
-
+// const cancel = () => {
+//   modal.value.dismiss(null, 'cancel');
+// };
 </script>
 
 <style scoped>

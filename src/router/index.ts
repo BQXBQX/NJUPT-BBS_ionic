@@ -7,7 +7,7 @@ import MinePage from "../views/MinePage/MinePage.vue";
 import showBottomTabs from "@/components/showBottomTabs.vue";
 import PostPage from "../views/PostPage/PostPage.vue"
 import SearchPage from "@/views/SearchPage/SearchPage.vue";
-
+import SettingPage from "@/views/SettingPage/SettingPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,6 +18,11 @@ const routes: Array<RouteRecordRaw> = [
     path:"/post",
     name:"post",
     component: PostPage
+  },
+  {
+    path:"/setting",
+    name:"setting",
+    component: SettingPage
   },
   {
     path:"/search",
