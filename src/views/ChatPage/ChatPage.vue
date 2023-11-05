@@ -82,6 +82,7 @@
           :key="item.id"
           @touchstart="startLongPress(index)"
           @touchend="endLongPress"
+          @click="router.push('/chatcontent')"
           ><ion-avatar>
             <img
               alt="Silhouette of a person's head"

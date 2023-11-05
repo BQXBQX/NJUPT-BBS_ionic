@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="secondary">
-          <ion-back-button default-href="#"></ion-back-button>
+          <ion-back-button default-href="#" @click="backPage"></ion-back-button>
         </ion-buttons>
         <ion-title>John</ion-title>
       </ion-toolbar>
@@ -41,11 +41,14 @@
       <ion-toolbar>
         <div class="footerContainer">
           <div class="footerInputContainer">
-            <ion-textarea
+            <textarea
               placeholder="发消息..."
               class="footerInput"
-            ></ion-textarea>
+              :autoGrow="true"
+              v-model="inputMessage"
+            ></textarea>
           </div>
+
           <label for="file-input" style="display: flex; align-items: center">
             <ion-icon
               :icon="addCircleOutline"
@@ -53,7 +56,12 @@
             ></ion-icon>
           </label>
           <input type="file" id="file-input" style="display: none" />
-          <ion-button size="default" color="danger" style="height: 10px">
+          <ion-button
+            size="default"
+            color="danger"
+            style="height: 10px"
+            @click="sendMessage"
+          >
             发送
           </ion-button>
         </div>
@@ -63,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, Ref, onMounted } from "vue";
 import {
   IonButton,
   IonTextarea,
@@ -87,6 +95,9 @@ import {
   IonInput,
 } from "@ionic/vue";
 import { personCircle, addCircleOutline } from "ionicons/icons";
+import router from "@/router";
+
+
 
 const messages = ref([
   { id: 1, sender: "John", content: "Hello!", timestamp: "10:00 AM" },
@@ -94,10 +105,37 @@ const messages = ref([
     id: 2,
     sender: "Mine",
     content:
-      "Hi John! How are you, i really want to fuck you now! Hi John! How are you, i really want to fuck you now!",
+      "Hi John! How are you, i really want to fuck you now! \n Hi John! How are you, i really want to fuck you now!",
     timestamp: "10:01 AM",
   },
 ]);
+
+const inputMessage: Ref<string> = ref("");
+
+const idCount = ref(2);
+
+onMounted(()=>{
+  inputMessage.value = localStorage.getItem("draft")
+})
+
+function sendMessage() {
+  console.log(inputMessage.value);
+  idCount.value++;
+  console.log(idCount.value);
+
+  messages.value.push({
+    id: idCount.value,
+    sender: "Mine",
+    content: inputMessage.value,
+    timestamp: "10:03AM",
+  });
+  inputMessage.value = ""
+}
+
+function backPage(){
+  localStorage.setItem('draft',inputMessage.value)
+  router.go(-1)
+}
 </script>
 
 <style scoped>
@@ -106,25 +144,35 @@ const messages = ref([
   flex-direction: column;
   gap: 2vh;
   margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+span {
+  display: inline-block;
+  word-break: break-all;
+  white-space: pre-line; 
 }
 .footerContainer {
   display: flex;
   align-items: center;
+  height: fit-content;
 }
 .footerInputContainer {
-  flex-grow: 1;
   background: rgb(255, 255, 255, 0.1);
-  border-radius: 10px;
-  margin: 4px;
+  flex-grow: 1;
+  border-radius: 15px;
   padding: 4px;
+  display: flex;
 }
 .footerInput {
-  border-radius: 10px;
+  background-color: transparent;
   margin: 4px;
-  --padding-start: 3vw;
-  --padding-end: 4vw;
-  --padding-top: 0px;
-  --padding-bottom: 0px;
+  border-radius: 15px;
+  border: 0;
+  width: 100%;
+  resize: none;
+}
+.footerInput:focus {
+  outline: none;
 }
 .chatMessageBar {
   width: 100%;
