@@ -65,6 +65,7 @@
           :key="item.id"
           @touchstart="startLongPressCancelUp(index)"
           @touchend="endLongPress"
+          @click="router.push('/chatcontent')"
           ><ion-avatar>
             <img
               alt="Silhouette of a person's head"
@@ -101,7 +102,7 @@
     ></ion-action-sheet>
     <ion-action-sheet
       :is-open="isCancelUpOpen"
-      header="ActionsCancelUp"
+      header="Actions"
       :buttons="actionSheetCancelUpButtons"
       @didDismiss="setCancelUpOpen(false)"
     ></ion-action-sheet>
@@ -127,6 +128,7 @@ import {
   IonRefresherContent,
 } from "@ionic/vue";
 import { heart, person, chatbubbleEllipses } from "ionicons/icons";
+import router from "@/router";
 
 const itemList: any = ref(null);
 
@@ -219,7 +221,7 @@ const endLongPress = () => {
 
 const presentAlert = async () => {
   const alert = await alertController.create({
-    header: "Alert",
+    header: "Warning",
     subHeader: "确定删除吗？",
     message: "删除后所有的聊天记录将被清除",
     buttons: [
