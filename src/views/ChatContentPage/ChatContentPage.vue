@@ -184,7 +184,7 @@ span {
 .footerInput {
   height: 26px;
   min-height: 26px;
-  max-height: 86px;
+  max-height: 82px;
   resize: none;
   background-color: transparent;
   margin: 4px;

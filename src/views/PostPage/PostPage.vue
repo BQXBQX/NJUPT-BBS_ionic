@@ -1,10 +1,10 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-toolbar style="padding: 5px">
+      <ion-toolbar style="padding: 5px 0">
         <ion-buttons slot="start">
           <ion-button @click="$router.go(-1)" style="padding: 0px">
-            <ion-icon :icon="chevronBackOutline" size="large"> </ion-icon>
+            <ion-icon :icon="chevronBackOutline" size="default"> </ion-icon>
           </ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
