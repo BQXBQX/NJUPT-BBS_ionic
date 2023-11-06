@@ -5,7 +5,9 @@
         <ion-buttons slot="secondary">
           <ion-back-button default-href="#"></ion-back-button>
         </ion-buttons>
-        <ion-buttons slot="end"> concern </ion-buttons>
+        <ion-buttons slot="end"> <concern-button>
+          
+        </concern-button> </ion-buttons>
         <ion-buttons slot="end">
           <ion-icon
             :icon="shareOutline"
@@ -32,35 +34,35 @@
     <ion-content>
       <swiper :pagination="true" :modules="[Pagination]" class="mySwiper">
         <swiper-slide>
-          <div>
-            <ion-img
-              src="https://ionic-docs-demo-v6.vercel.app/assets/madison.jpg"
+          <div class="sliderImgContainer">
+            <img
+              src="https://th.bing.com/th/id/OIP.qbKCUgXPfUFa2cEADaV5xgHadV?pid=ImgDet&rs=1"
               alt="The Wisconsin State Capitol building in Madison, WI at night"
-            ></ion-img>
+            />
           </div>
         </swiper-slide>
         <swiper-slide>
-          <div>
-            <ion-img
+          <div class="sliderImgContainer">
+            <img
               src="https://th.bing.com/th/id/OIP.Mo8NNJVIw_LUxHQ3B5Ky6AHaHa?pid=ImgDet&rs=1"
               alt="The Wisconsin State Capitol building in Madison, WI at night"
-            ></ion-img>
+            />
           </div>
         </swiper-slide>
         <swiper-slide>
-          <div>
-            <ion-img
-              src="https://ionic-docs-demo-v6.vercel.app/assets/madison.jpg"
+          <div class="sliderImgContainer">
+            <img
+              src="https://th.bing.com/th/id/OIP.pZHL7DCDmur3fga82E-J-gHaNK?pid=ImgDet&rs=1"
               alt="The Wisconsin State Capitol building in Madison, WI at night"
-            ></ion-img>
+            />
           </div>
         </swiper-slide>
         <swiper-slide>
-          <div>
-            <ion-img
+          <div class="sliderImgContainer">
+            <img
               src="https://ionic-docs-demo-v6.vercel.app/assets/madison.jpg"
               alt="The Wisconsin State Capitol building in Madison, WI at night"
-            ></ion-img>
+            />
           </div>
         </swiper-slide>
       </swiper>
@@ -218,6 +220,7 @@ import { ref } from "vue";
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from "swiper/vue";
 
+import concernButton from '../../components/concernButton/concernButton.vue'
 // Import Swiper styles
 import "swiper/css";
 
@@ -261,6 +264,14 @@ function clickSlider() {
 }
 </script>
 <style>
+.sliderImgContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+img {
+  max-height: 50vh;
+}
 .mySwiper {
   width: 100%;
 }
