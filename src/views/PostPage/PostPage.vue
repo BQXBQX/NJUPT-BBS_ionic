@@ -93,13 +93,23 @@
       >
         <div
           class="divider"
-          style="background: rgb(255, 255, 255, 0.5); width: 94vw; height: 1px"
+          style="background: rgb(255, 255, 255, 0.1); width: 94vw; height: 1px"
         ></div>
       </div>
       <div class="postComment">
         <span class="postCommentTotal">共43条评论</span>
-        <ion-list lines="none" style="margin-top: 5px">
-          <ion-item
+        <div
+          lines="none"
+          style="
+            margin-top: 2vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2vh;
+            width: 100%;
+          "
+        >
+          <div
             class="firstItem"
             style="margin-bottom: 10px"
             v-for="item in commentRef"
@@ -113,18 +123,46 @@
                 />
               </ion-avatar>
             </div>
-            <div class="commentSpanContainer">
-              <span style="color: rgb(255, 255, 255, 0.5); font-size: 14px">
-                {{ item.userName }}
-              </span>
-              <span style="font-size: 16px; margin-top: 5px">
-                {{ item.commentMessage }}
-              </span>
-              <span style="color: rgb(255, 255, 255, 0.5); font-size: 14px">
-                {{ item.timestamp }}
-              </span>
-              <ion-list lines="none" style="margin-top: 2px">
-                <ion-item
+            <div class="RightContainer">
+              <div class="firstUserCommentContainer">
+                <div class="spanContainer">
+                  <span style="color: rgb(255, 255, 255, 0.5); font-size: 14px">
+                    {{ item.userName }}
+                  </span>
+                  <span style="font-size: 16px; margin-top: 2px">
+                    {{ item.commentMessage }}
+                  </span>
+                  <span style="color: rgb(255, 255, 255, 0.5); font-size: 14px">
+                    {{ item.timestamp }}
+                  </span>
+                </div>
+                <div class="userGoodContainer">
+                  <ion-icon
+                    :icon="heartOutline"
+                    size="default"
+                    style="
+                      color: rgb(255, 255, 255, 0.3);
+                      height: 20px;
+                      width: 20px;
+                    "
+                  >
+                  </ion-icon>
+                  <span style="color: rgb(255, 255, 255, 0.3); font-size: 12px"
+                    >1300</span
+                  >
+                </div>
+              </div>
+
+              <div
+                style="
+                  margin-top: 1.2vh;
+                  width: 100%;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.8vh;
+                "
+              >
+                <div
                   class="secondItem"
                   v-for="secondItem in item.commentInside"
                   :key="secondItem.id"
@@ -137,31 +175,63 @@
                       />
                     </ion-avatar>
                   </div>
-                  <div class="commentSpanContainer">
-                    <span
-                      style="color: rgb(255, 255, 255, 0.5); font-size: 14px"
-                    >
-                      {{ secondItem.userName }}
-                    </span>
-                    <span style="font-size: 16px; margin-top: 5px">
-                      {{ secondItem.commentMessage }}
-                    </span>
-                    <span
-                      style="color: rgb(255, 255, 255, 0.5); font-size: 14px"
-                    >
-                      {{ secondItem.timestamp }}
-                    </span>
+                  <div class="RightContainer">
+                    <div class="firstUserCommentContainer">
+                      <div class="spanContainer">
+                        <span
+                          style="
+                            color: rgb(255, 255, 255, 0.5);
+                            font-size: 14px;
+                          "
+                        >
+                          {{ secondItem.userName }}
+                        </span>
+                        <span style="font-size: 16px; margin-top: 5px">
+                          {{ secondItem.commentMessage }}
+                        </span>
+                        <span
+                          style="
+                            color: rgb(255, 255, 255, 0.5);
+                            font-size: 14px;
+                          "
+                        >
+                          {{ secondItem.timestamp }}
+                        </span>
+                      </div>
+                      <div class="userGoodContainer">
+                        <ion-icon
+                          :icon="heartOutline"
+                          size="default"
+                          style="
+                            color: rgb(255, 255, 255, 0.3);
+                            height: 20px;
+                            width: 20px;
+                          "
+                        >
+                        </ion-icon>
+                        <span
+                          style="
+                            color: rgb(255, 255, 255, 0.3);
+                            font-size: 12px;
+                          "
+                          >1300</span
+                        >
+                      </div>
+                    </div>
                   </div>
-                </ion-item>
-              </ion-list>
+                </div>
+              </div>
+              <div
+                style="
+                  height: 1px;
+                  width: 100%;
+                  background-color: rgb(255, 255, 255, 0.1);
+                  margin-top: 2vh;
+                "
+              ></div>
             </div>
-            <div class="userGoodContainer">
-              <ion-icon :icon="heartOutline" size="large" style="color: rgb(255, 255, 255, 0.3);">
-              </ion-icon>
-              <span style="color: rgb(255, 255, 255, 0.3);">1300</span>
-            </div>
-          </ion-item>
-        </ion-list>
+          </div>
+        </div>
       </div>
     </ion-content>
     <ion-footer>
@@ -281,7 +351,8 @@ const commentRef = ref([
     userAvatar:
       "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
     userName: "bqx",
-    commentMessage: "hello world! I really want to fuck you!!!",
+    commentMessage:
+      "这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容",
     timestamp: "2023.12.11 10:01 AM",
     commentInside: [
       {
@@ -290,7 +361,8 @@ const commentRef = ref([
           "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
 
         userName: "BQXBQX",
-        commentMessage: "HI world! Cool😎",
+        commentMessage:
+          "这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容",
         timestamp: "2023.12.11 10:01 AM",
         toUserName: "",
       },
@@ -406,25 +478,35 @@ function clickSlider() {
 }
 </script>
 <style scoped>
-.userGoodContainer {
-  width: 40px;
+.firstUserCommentContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.spanContainer {
   display: flex;
   flex-direction: column;
+}
+.userGoodContainer {
+  display: flex;
+  margin-left: 2vw;
+  flex-direction: column;
   align-items: center;
+  height: fit-content;
 }
 ion-item {
   --padding-start: 0;
   --padding-top: 1vh;
-  display: flex;
   align-items: flex-start;
-  flex-direction: row;
 }
 .firstItem {
-  flex-direction: row-reverse;
+  display: flex;
+  /* flex-direction: row-reverse; */
+  align-items: flex-start;
 }
-.commentSpanContainer {
+.RightContainer {
   flex-grow: 1;
-  margin: 0 2vw;
+  margin-left: 2vw;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -436,6 +518,9 @@ ion-item {
 }
 img {
   max-height: 50vh;
+}
+.secondItem {
+  display: flex;
 }
 .mySwiper {
   width: 100%;
