@@ -98,57 +98,69 @@
       </div>
       <div class="postComment">
         <span class="postCommentTotal">共43条评论</span>
-        <ion-list>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
+        <ion-list lines="none" style="margin-top: 5px">
+          <ion-item
+            class="firstItem"
+            style="margin-bottom: 10px"
+            v-for="item in commentRef"
+            :key="item.id"
+          >
+            <div class="userAvatarContainer">
+              <ion-avatar style="height: 40px; width: 40px">
+                <img
+                  alt="Silhouette of a person's head"
+                  :src="item.userAvatar"
+                />
+              </ion-avatar>
+            </div>
+            <div class="commentSpanContainer">
+              <span style="color: rgb(255, 255, 255, 0.5); font-size: 14px">
+                {{ item.userName }}
+              </span>
+              <span style="font-size: 16px; margin-top: 5px">
+                {{ item.commentMessage }}
+              </span>
+              <span style="color: rgb(255, 255, 255, 0.5); font-size: 14px">
+                {{ item.timestamp }}
+              </span>
+              <ion-list lines="none" style="margin-top: 2px">
+                <ion-item
+                  class="secondItem"
+                  v-for="secondItem in item.commentInside"
+                  :key="secondItem.id"
+                >
+                  <div class="userAvatarContainer">
+                    <ion-avatar style="height: 25px; width: 25px">
+                      <img
+                        alt="Silhouette of a person's head"
+                        :src="secondItem.userAvatar"
+                      />
+                    </ion-avatar>
+                  </div>
+                  <div class="commentSpanContainer">
+                    <span
+                      style="color: rgb(255, 255, 255, 0.5); font-size: 14px"
+                    >
+                      {{ secondItem.userName }}
+                    </span>
+                    <span style="font-size: 16px; margin-top: 5px">
+                      {{ secondItem.commentMessage }}
+                    </span>
+                    <span
+                      style="color: rgb(255, 255, 255, 0.5); font-size: 14px"
+                    >
+                      {{ secondItem.timestamp }}
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-list>
+            </div>
+            <div class="userGoodContainer">
+              <ion-icon :icon="heartOutline" size="large" style="color: rgb(255, 255, 255, 0.3);">
+              </ion-icon>
+              <span style="color: rgb(255, 255, 255, 0.3);">1300</span>
+            </div>
+          </ion-item>
         </ion-list>
       </div>
     </ion-content>
@@ -165,7 +177,7 @@
             width="200"
             height="200"
             style="
-              height: 40px;
+              height: 44px;
               width: 80px;
               background: rgb(255, 255, 255, 0.1);
               border-radius: 20px 0 0 20px;
@@ -181,7 +193,12 @@
           <ion-input
             color="medium"
             placeholder="说点什么..."
-            style="height: 40px; font-size: 13px"
+            style="
+              height: 40px;
+              font-size: 13px;
+              background: rgb(255, 255, 255, 0.1);
+              border-radius: 0 20px 20px 0;
+            "
           ></ion-input>
           <div class="footerItem">
             <ion-icon
@@ -258,13 +275,160 @@ import {
 
 import router from "@/router";
 
+const commentRef = ref([
+  {
+    id: 2,
+    userAvatar:
+      "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+    userName: "bqx",
+    commentMessage: "hello world! I really want to fuck you!!!",
+    timestamp: "2023.12.11 10:01 AM",
+    commentInside: [
+      {
+        id: 1,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQXBQX",
+        commentMessage: "HI world! Cool😎",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "",
+      },
+      {
+        id: 2,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQX",
+        commentMessage: "hello BQXBQX!",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "BQXBQX",
+      },
+    ],
+  },
+  {
+    id: 2,
+    userAvatar:
+      "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+    userName: "bqx",
+    commentMessage: "hello world! I really want to fuck you!!!",
+    timestamp: "2023.12.11 10:01 AM",
+    commentInside: [
+      {
+        id: 1,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQXBQX",
+        commentMessage: "HI world! cool😎",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "",
+      },
+      {
+        id: 2,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQX",
+        commentMessage: "hello BQXBQX!",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "BQXBQX",
+      },
+    ],
+  },
+  {
+    id: 2,
+    userAvatar:
+      "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+    userName: "bqx",
+    commentMessage: "hello world! I really want to fuck you!!!",
+    timestamp: "2023.12.11 10:01 AM",
+    commentInside: [
+      {
+        id: 1,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQXBQX",
+        commentMessage: "HI world! cool😎",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "",
+      },
+      {
+        id: 2,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQX",
+        commentMessage: "hello BQXBQX!",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "BQXBQX",
+      },
+    ],
+  },
+  {
+    id: 2,
+    userAvatar:
+      "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+    userName: "bqx",
+    commentMessage: "hello world!",
+    timestamp: "2023.12.11 10:01 AM",
+    commentInside: [
+      {
+        id: 1,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQXBQX",
+        commentMessage: "HI world!",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "",
+      },
+      {
+        id: 2,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQX",
+        commentMessage: "hello BQXBQX!",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "BQXBQX",
+      },
+    ],
+  },
+]);
+
 const dividerRef = <any>ref(null);
 
 function clickSlider() {
   dividerRef.value.scrollIntoView({ behavior: "smooth" });
 }
 </script>
-<style>
+<style scoped>
+.userGoodContainer {
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+ion-item {
+  --padding-start: 0;
+  --padding-top: 1vh;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+}
+.firstItem {
+  flex-direction: row-reverse;
+}
+.commentSpanContainer {
+  flex-grow: 1;
+  margin: 0 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 .sliderImgContainer {
   display: flex;
   justify-content: center;
@@ -297,6 +461,9 @@ img {
   background: rgb(255, 255, 255, 0.1);
   border-radius: 0 20px 20px 0;
 }
+.userAvatarContainer {
+  display: flex;
+}
 .footerComment {
   display: flex;
   align-items: center;
@@ -321,5 +488,8 @@ img {
 .footerIcon {
   height: 25px;
   width: 25px;
+}
+input {
+  height: 40px;
 }
 </style>
