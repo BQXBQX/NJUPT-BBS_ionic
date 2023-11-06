@@ -1,26 +1,25 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="secondary">
-          <ion-back-button default-href="#"></ion-back-button>
+      <ion-toolbar style="padding: 5px">
+        <ion-buttons slot="start">
+          <ion-button @click="$router.go(-1)" style="padding: 0px">
+            <ion-icon :icon="chevronBackOutline" size="large"> </ion-icon>
+          </ion-button>
         </ion-buttons>
-        <ion-buttons slot="end"> <concern-button>
-          
-        </concern-button> </ion-buttons>
         <ion-buttons slot="end">
-          <ion-icon
-            :icon="shareOutline"
-            size="large"
-            color="primary"
-            style="height: 27.2px"
-          >
-          </ion-icon>
+          <concern-button> </concern-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button>
+            <ion-icon :icon="shareOutline" size="large" color="primary">
+            </ion-icon>
+          </ion-button>
         </ion-buttons>
 
         <ion-avatar
           slot="secondary"
-          style="margin: 0 0 0 3vw; display: flex; align-items: center"
+          style="margin: 0 0 0 3px; display: flex; align-items: center"
         >
           <img
             alt="Silhouette of a person's head"
@@ -220,7 +219,7 @@ import { ref } from "vue";
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from "swiper/vue";
 
-import concernButton from '../../components/concernButton/concernButton.vue'
+import concernButton from "../../components/concernButton/concernButton.vue";
 // Import Swiper styles
 import "swiper/css";
 
@@ -232,6 +231,7 @@ import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 
 import {
+  IonButton,
   IonPage,
   IonHeader,
   IonToolbar,
@@ -253,6 +253,7 @@ import {
   chatbubbleEllipsesOutline,
   thumbsUpOutline,
   heartOutline,
+  chevronBackOutline,
 } from "ionicons/icons";
 
 import router from "@/router";

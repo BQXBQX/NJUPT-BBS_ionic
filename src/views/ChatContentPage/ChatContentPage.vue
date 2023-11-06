@@ -46,6 +46,7 @@
               class="footerInput"
               :autoGrow="true"
               v-model="inputMessage"
+              ref="inputTextarea"
             ></textarea>
           </div>
 
@@ -57,9 +58,9 @@
           </label>
           <input type="file" id="file-input" style="display: none" />
           <ion-button
-            size="default"
+            size="small"
             color="danger"
-            style="height: 10px"
+            style="--padding-top: 12px; --padding-bottom: 12px"
             @click="sendMessage"
           >
             发送
@@ -71,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, Ref, onMounted } from "vue";
+import { ref, computed, Ref, onMounted, watch } from "vue";
 import {
   IonButton,
   IonTextarea,
@@ -97,7 +98,7 @@ import {
 import { personCircle, addCircleOutline } from "ionicons/icons";
 import router from "@/router";
 
-
+const inputTextarea = ref();
 
 const messages = ref([
   { id: 1, sender: "John", content: "Hello!", timestamp: "10:00 AM" },
@@ -114,9 +115,22 @@ const inputMessage: Ref<string> = ref("");
 
 const idCount = ref(2);
 
-onMounted(()=>{
-  inputMessage.value = localStorage.getItem("draft")
-})
+onMounted(() => {
+  const draft = localStorage.getItem("draft");
+  console.log(draft);
+  inputMessage.value = draft;
+});
+
+watch(inputMessage, () => {
+  setTimeout(() => {
+    const textarea = inputTextarea.value;
+    console.log(textarea.scrollHeight);
+    if (textarea) {
+      textarea.style.height = "26px";
+      textarea.style.height = textarea.scrollHeight + "px";
+    }
+  }, 0);
+});
 
 function sendMessage() {
   console.log(inputMessage.value);
@@ -129,12 +143,12 @@ function sendMessage() {
     content: inputMessage.value,
     timestamp: "10:03AM",
   });
-  inputMessage.value = ""
+  inputMessage.value = "";
 }
 
-function backPage(){
-  localStorage.setItem('draft',inputMessage.value)
-  router.go(-1)
+function backPage() {
+  localStorage.setItem("draft", inputMessage.value);
+  router.go(-1);
 }
 </script>
 
@@ -149,27 +163,33 @@ function backPage(){
 span {
   display: inline-block;
   word-break: break-all;
-  white-space: pre-line; 
+  white-space: pre-line;
 }
 .footerContainer {
+  padding: 5px;
+  gap: 4px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   height: fit-content;
+  align-content: center;
+  flex-wrap: wrap;
 }
 .footerInputContainer {
   background: rgb(255, 255, 255, 0.1);
   flex-grow: 1;
-  border-radius: 15px;
+  border-radius: 10px;
   padding: 4px;
   display: flex;
 }
 .footerInput {
+  height: 26px;
+  min-height: 26px;
+  max-height: 86px;
+  resize: none;
   background-color: transparent;
   margin: 4px;
-  border-radius: 15px;
   border: 0;
   width: 100%;
-  resize: none;
 }
 .footerInput:focus {
   outline: none;
