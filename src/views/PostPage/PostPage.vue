@@ -1,24 +1,25 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="secondary">
-          <ion-back-button default-href="#"></ion-back-button>
+      <ion-toolbar style="padding: 5px 0">
+        <ion-buttons slot="start">
+          <ion-button @click="$router.go(-1)" style="padding: 0px">
+            <ion-icon :icon="chevronBackOutline" size="default"> </ion-icon>
+          </ion-button>
         </ion-buttons>
-        <ion-buttons slot="end"> concern </ion-buttons>
         <ion-buttons slot="end">
-          <ion-icon
-            :icon="shareOutline"
-            size="large"
-            color="primary"
-            style="height: 27.2px"
-          >
-          </ion-icon>
+          <concern-button> </concern-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button>
+            <ion-icon :icon="shareOutline" size="large" color="primary">
+            </ion-icon>
+          </ion-button>
         </ion-buttons>
 
         <ion-avatar
           slot="secondary"
-          style="margin: 0 0 0 3vw; display: flex; align-items: center"
+          style="margin: 0 0 0 3px; display: flex; align-items: center"
         >
           <img
             alt="Silhouette of a person's head"
@@ -32,35 +33,35 @@
     <ion-content>
       <swiper :pagination="true" :modules="[Pagination]" class="mySwiper">
         <swiper-slide>
-          <div>
-            <ion-img
-              src="https://ionic-docs-demo-v6.vercel.app/assets/madison.jpg"
+          <div class="sliderImgContainer">
+            <img
+              src="https://th.bing.com/th/id/OIP.qbKCUgXPfUFa2cEADaV5xgHadV?pid=ImgDet&rs=1"
               alt="The Wisconsin State Capitol building in Madison, WI at night"
-            ></ion-img>
+            />
           </div>
         </swiper-slide>
         <swiper-slide>
-          <div>
-            <ion-img
+          <div class="sliderImgContainer">
+            <img
               src="https://th.bing.com/th/id/OIP.Mo8NNJVIw_LUxHQ3B5Ky6AHaHa?pid=ImgDet&rs=1"
               alt="The Wisconsin State Capitol building in Madison, WI at night"
-            ></ion-img>
+            />
           </div>
         </swiper-slide>
         <swiper-slide>
-          <div>
-            <ion-img
-              src="https://ionic-docs-demo-v6.vercel.app/assets/madison.jpg"
+          <div class="sliderImgContainer">
+            <img
+              src="https://th.bing.com/th/id/OIP.pZHL7DCDmur3fga82E-J-gHaNK?pid=ImgDet&rs=1"
               alt="The Wisconsin State Capitol building in Madison, WI at night"
-            ></ion-img>
+            />
           </div>
         </swiper-slide>
         <swiper-slide>
-          <div>
-            <ion-img
+          <div class="sliderImgContainer">
+            <img
               src="https://ionic-docs-demo-v6.vercel.app/assets/madison.jpg"
               alt="The Wisconsin State Capitol building in Madison, WI at night"
-            ></ion-img>
+            />
           </div>
         </swiper-slide>
       </swiper>
@@ -218,6 +219,7 @@ import { ref } from "vue";
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from "swiper/vue";
 
+import concernButton from "../../components/concernButton/concernButton.vue";
 // Import Swiper styles
 import "swiper/css";
 
@@ -229,6 +231,7 @@ import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 
 import {
+  IonButton,
   IonPage,
   IonHeader,
   IonToolbar,
@@ -250,6 +253,7 @@ import {
   chatbubbleEllipsesOutline,
   thumbsUpOutline,
   heartOutline,
+  chevronBackOutline,
 } from "ionicons/icons";
 
 import router from "@/router";
@@ -261,6 +265,14 @@ function clickSlider() {
 }
 </script>
 <style>
+.sliderImgContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+img {
+  max-height: 50vh;
+}
 .mySwiper {
   width: 100%;
 }

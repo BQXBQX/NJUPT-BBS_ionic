@@ -8,6 +8,7 @@ import showBottomTabs from "@/components/showBottomTabs.vue";
 import PostPage from "../views/PostPage/PostPage.vue"
 import SearchPage from "@/views/SearchPage/SearchPage.vue";
 import SettingPage from "@/views/SettingPage/SettingPage.vue";
+import ChatContentPage from "@/views/ChatContentPage/ChatContentPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,6 +19,11 @@ const routes: Array<RouteRecordRaw> = [
     path:"/post",
     name:"post",
     component: PostPage
+  },
+  {
+    path:"/chatcontent",
+    name:"chatContent",
+    component: ChatContentPage
   },
   {
     path:"/setting",
