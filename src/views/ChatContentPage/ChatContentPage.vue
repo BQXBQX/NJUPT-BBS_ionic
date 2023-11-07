@@ -68,12 +68,20 @@
         </div>
       </ion-toolbar>
     </ion-footer>
+    <ion-alert
+      :is-open="isOpen"
+      header="Alert"
+      sub-header="不能发送空白信息"
+      :buttons="alertButtons"
+      @didDismiss="setOpen(false)"
+    ></ion-alert>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, Ref, onMounted, watch } from "vue";
 import {
+  IonAlert,
   IonButton,
   IonTextarea,
   IonPage,
@@ -100,17 +108,24 @@ import router from "@/router";
 
 const inputTextarea = ref();
 
+const isOpen = ref(false);
+
+const alertButtons = ['OK'];
+
 const messages = ref([
   { id: 1, sender: "John", content: "Hello!", timestamp: "10:00 AM" },
   {
     id: 2,
     sender: "Mine",
     content:
-      "Hi John! How are you, i really want to fuck you now! \n Hi John! How are you, i really want to fuck you now!",
+      // "Hi John! How are you, i really want to fuck you now! \n Hi John! How are you, i really want to fuck you now!",
+      "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
     timestamp: "10:01 AM",
   },
 ]);
-
+const setOpen = (state: boolean) => {
+  isOpen.value = state;
+};
 const inputMessage: Ref<string> = ref("");
 
 const idCount = ref(2);
@@ -124,7 +139,7 @@ onMounted(() => {
 watch(inputMessage, () => {
   setTimeout(() => {
     const textarea = inputTextarea.value;
-    console.log(textarea.scrollHeight);
+    // console.log(textarea.scrollHeight);
     if (textarea) {
       textarea.style.height = "26px";
       textarea.style.height = textarea.scrollHeight + "px";
@@ -132,18 +147,28 @@ watch(inputMessage, () => {
   }, 0);
 });
 
-function sendMessage() {
-  console.log(inputMessage.value);
-  idCount.value++;
-  console.log(idCount.value);
+function isAllWhitespace(str: string) {
+  return /^\s*$/.test(str);
+}
 
-  messages.value.push({
-    id: idCount.value,
-    sender: "Mine",
-    content: inputMessage.value,
-    timestamp: "10:03AM",
-  });
-  inputMessage.value = "";
+function sendMessage() {
+  console.log(isAllWhitespace(inputMessage.value));
+  if (isAllWhitespace(inputMessage.value) === true) {
+    setOpen(true);
+    inputTextarea.value.focus();
+  }
+  if (isAllWhitespace(inputMessage.value) === false) {
+    // console.log(inputMessage.value);
+    idCount.value++;
+    console.log(idCount.value);
+    messages.value.push({
+      id: idCount.value,
+      sender: "Mine",
+      content: inputMessage.value,
+      timestamp: "10:03AM",
+    });
+    inputMessage.value = "";
+  }
 }
 
 function backPage() {
