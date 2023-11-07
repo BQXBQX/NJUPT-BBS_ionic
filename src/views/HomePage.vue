@@ -50,7 +50,8 @@
             @ionScroll="handleScroll"
           >
             <div class="anchorFront"></div>
-            <Waterfall
+            <newWaterFall :list="list" :waterfallBreakpoints="waterfallBreakpoints"></newWaterFall>
+            <!-- <Waterfall
               style="background: transparent"
               :list="list"
               :breakpoints="waterfallBreakpoints"
@@ -64,7 +65,7 @@
                   <p class="cardText">this is title {{ index }}</p>
                 </div>
               </template>
-            </Waterfall>
+            </Waterfall> -->
             <div ref="anchorEnd"></div>
           </ion-content>
         </swiper-slide>
@@ -97,7 +98,7 @@ import { SwiperSlide, Swiper } from "swiper/vue";
 
 // Import Swiper styles
 import "swiper/css";
-
+import newWaterFall from '../components/newWaterFall/newWaterFall.vue'
 import { Ref, onMounted, ref, watch, onBeforeUnmount } from "vue";
 import {
   IonPage,
@@ -228,7 +229,7 @@ const handleScroll = throttle(async (event) => {
       scrollPosition > positionThresholdFetchDate &&
       event.detail.scrollTop >= scrollPosition
     ) {
-      fetch("https://picsum.photos/200")
+      fetch("https://picsum.photos/200",)
         .then((response) => {
           if (!response.ok) {
             throw new Error("请求失败");
