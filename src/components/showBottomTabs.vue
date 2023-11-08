@@ -4,7 +4,7 @@
       
       <ion-router-outlet></ion-router-outlet>
 
-      <ion-tab-bar slot="bottom">
+      <ion-tab-bar slot="bottom" style="height: 56px;">
         <ion-tab-button tab="home" href="/home">
           <ion-icon :icon="home" />
           <!-- <ion-label>首页</ion-label> -->
