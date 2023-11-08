@@ -50,3 +50,9 @@ import {
 
 
 </script>
+<style scoped>
+ion-icon{
+  height: 25px;
+  width: 25px;
+}
+</style>

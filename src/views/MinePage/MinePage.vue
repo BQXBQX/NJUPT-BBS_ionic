@@ -37,7 +37,7 @@
           </ion-item>
         </ion-list>
         <ion-list lines="none" class="menuBottom">
-          <ion-item  @click="router.push('/setting')">
+          <ion-item @click="router.push('/setting')">
             <ion-label
               class="ionLabel"
               style="
@@ -99,8 +99,8 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content :fullscreen="true">
-        <ion-header collapse="condense">
+      <ion-content :fullscreen="true" style="background-color: aqua">
+        <ion-header collapse="condense" style="margin-top: 2vh">
           <ion-toolbar>
             <ion-title size="large">
               <div style="display: flex; gap: 5vw">
@@ -126,6 +126,9 @@
             </ion-title>
           </ion-toolbar>
         </ion-header>
+        <div class="PersonalProfileContainer">
+          <span>点击这里，填写简介</span>
+        </div>
         <div class="mineMessage">
           <div class="mineMessageItem">
             <span class="mineMessageItemSpan">52</span>
@@ -165,38 +168,14 @@
             </ion-button>
           </div>
         </div>
-
-        <ion-list>
-          <ion-item-divider ref="dividerRef" :sticky="true" color="primary">
-            <ion-label>this is user message</ion-label>
-          </ion-item-divider>
-          <ion-item>Item 1</ion-item>
-          <ion-item>Item 2</ion-item>
-          <ion-item>Item 3</ion-item>
-          <ion-item>Item 4</ion-item>
-          <ion-item>Item 5</ion-item>
-          <ion-item>Item 6</ion-item>
-          <ion-item>Item 7</ion-item>
-          <ion-item>Item 8</ion-item>
-          <ion-item>Item 9</ion-item>
-          <ion-item>Item 10</ion-item>
-          <ion-item>Item 11</ion-item>
-          <ion-item>Item 12</ion-item>
-          <ion-item>Item 13</ion-item>
-          <ion-item>Item 14</ion-item>
-          <ion-item>Item 15</ion-item>
-          <ion-item>Item 16</ion-item>
-          <ion-item>Item 17</ion-item>
-          <ion-item>Item 18</ion-item>
-          <ion-item>Item 19</ion-item>
-          <ion-item>Item 20</ion-item>
-        </ion-list>
+        <my-post-container></my-post-container>
       </ion-content>
     </ion-page>
   </ion-page>
 </template>
 
 <script setup lang="ts">
+import myPostContainer from "../../components/myPostContainer/myPostContainer.vue";
 import { ref } from "vue";
 import {
   IonPage,
@@ -215,7 +194,7 @@ import {
   IonLabel,
   IonItemDivider,
   IonModal,
-  IonInput
+  IonInput,
 } from "@ionic/vue";
 import {
   settingsOutline,
@@ -237,6 +216,9 @@ const dividerRef: any = ref(null);
 </script>
 
 <style scoped>
+.PersonalProfileContainer {
+  margin: 2vh 4vw;
+}
 .mineMessage {
   margin: 2vh 4vw;
   display: flex;
