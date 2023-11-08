@@ -10,7 +10,7 @@
     </ion-header>
     <ion-content>
       <ion-list lines="none" class="chatMessages">
-        <ion-item v-for="item in messages" :key="item.id">
+        <ion-item v-for="(item, index) in messages" :key="item.id">
           <div
             :class="
               item.sender === 'Mine' ? 'chatMessageBar' : 'chatMessageOtherBar'
@@ -27,6 +27,9 @@
               </ion-avatar>
             </div>
             <div
+              @touchstart="startLongPress($event, index)"
+              @touchend="endLongPress"
+              ref="triggerButton"
               :class="
                 item.sender === 'Mine' ? 'chatMessage' : 'otherChatMessage'
               "
@@ -35,6 +38,51 @@
             </div>
           </div>
         </ion-item>
+        <ion-popover
+          :side="popoverPosition"
+          alignment="center"
+          :is-open="popoverOpen"
+          :event="event"
+          :class="popoverPosition === 'top' ? 'topPopover' : 'bottomPopover'"
+          @didDismiss="popoverOpen = false"
+        >
+          <ion-content class="ion-padding">
+            <ion-buttons>
+              <div class="popoverIconContainer">
+                <ion-icon
+                  style="height: 20px; width: 20px"
+                  :icon="copy"
+                ></ion-icon>
+                <ion-icon
+                  style="height: 20px; width: 20px"
+                  :icon="arrowRedo"
+                ></ion-icon>
+                <svg
+                  style="height: 20px; width: 20px"
+                  t="1699405568580"
+                  class="icon"
+                  viewBox="0 0 1024 1024"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  p-id="12754"
+                  width="13"
+                  height="13"
+                >
+                  <path
+                    d="M64 432C64 299.4 171.4 192 304 192h16c35.4 0 64 28.6 64 64s-28.6 64-64 64h-16c-61.8 0-112 50.2-112 112v16h128c70.6 0 128 57.4 128 128v128c0 70.6-57.4 128-128 128H192c-70.6 0-128-57.4-128-128V432z m512 0c0-132.6 107.4-240 240-240h16c35.4 0 64 28.6 64 64s-28.6 64-64 64h-16c-61.8 0-112 50.2-112 112v16h128c70.6 0 128 57.4 128 128v128c0 70.6-57.4 128-128 128h-128c-70.6 0-128-57.4-128-128V432z"
+                    p-id="12755"
+                    fill="#ffffff"
+                  ></path>
+                </svg>
+                <ion-icon
+                  style="height: 20px; width: 20px"
+                  :icon="trash"
+                  @click="deleteMessageBar"
+                ></ion-icon>
+              </div>
+            </ion-buttons>
+          </ion-content>
+        </ion-popover>
       </ion-list>
     </ion-content>
     <ion-footer :translucent="true">
@@ -68,12 +116,20 @@
         </div>
       </ion-toolbar>
     </ion-footer>
+    <ion-alert
+      :is-open="isOpen"
+      header="Alert"
+      sub-header="不能发送空白信息"
+      :buttons="alertButtons"
+      @didDismiss="setOpen(false)"
+    ></ion-alert>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, Ref, onMounted, watch } from "vue";
 import {
+  IonAlert,
   IonButton,
   IonTextarea,
   IonPage,
@@ -89,16 +145,31 @@ import {
   IonIcon,
   IonList,
   IonItem,
+  IonPopover,
   IonActionSheet,
   IonBadge,
   IonRefresher,
   IonRefresherContent,
   IonInput,
 } from "@ionic/vue";
-import { personCircle, addCircleOutline } from "ionicons/icons";
+import {
+  personCircle,
+  addCircleOutline,
+  arrowRedo,
+  copy,
+  trash,
+} from "ionicons/icons";
 import router from "@/router";
 
 const inputTextarea = ref();
+
+const isOpen = ref(false);
+
+const alertButtons = ["OK"];
+
+const triggerButton: any = ref(null);
+
+const popoverPosition = ref("top");
 
 const messages = ref([
   { id: 1, sender: "John", content: "Hello!", timestamp: "10:00 AM" },
@@ -107,13 +178,86 @@ const messages = ref([
     sender: "Mine",
     content:
       "Hi John! How are you, i really want to fuck you now! \n Hi John! How are you, i really want to fuck you now!",
+    // "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    timestamp: "10:01 AM",
+  },
+  { id: 1, sender: "John", content: "Hello!", timestamp: "10:00 AM" },
+  {
+    id: 2,
+    sender: "Mine",
+    content:
+      "Hi John! How are you, i really want to fuck you now! \n Hi John! How are you, i really want to fuck you now!",
+    // "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    timestamp: "10:01 AM",
+  },
+  { id: 1, sender: "John", content: "Hello!", timestamp: "10:00 AM" },
+  {
+    id: 2,
+    sender: "Mine",
+    content:
+      "Hi John! How are you, i really want to fuck you now! \n Hi John! How are you, i really want to fuck you now!",
+    // "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    timestamp: "10:01 AM",
+  },
+  { id: 1, sender: "John", content: "Hello!", timestamp: "10:00 AM" },
+  {
+    id: 2,
+    sender: "Mine",
+    content:
+      "Hi John! How are you, i really want to fuck you now! \n Hi John! How are you, i really want to fuck you now!",
+    // "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    timestamp: "10:01 AM",
+  },
+  { id: 1, sender: "John", content: "Hello!", timestamp: "10:00 AM" },
+  {
+    id: 2,
+    sender: "Mine",
+    content:
+      "Hi John! How are you, i really want to fuck you now! \n Hi John! How are you, i really want to fuck you now!",
+    // "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    timestamp: "10:01 AM",
+  },
+  { id: 1, sender: "John", content: "Hello!", timestamp: "10:00 AM" },
+  {
+    id: 2,
+    sender: "Mine",
+    content:
+      "Hi John! How are you, i really want to fuck you now! \n Hi John! How are you, i really want to fuck you now!",
+    // "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    timestamp: "10:01 AM",
+  },
+  { id: 1, sender: "John", content: "Hello!", timestamp: "10:00 AM" },
+  {
+    id: 2,
+    sender: "Mine",
+    content:
+      // "Hi John! How are you, i really want to fuck you now! \n Hi John! How are you, i really want to fuck you now!",
+      "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    timestamp: "10:01 AM",
+  },
+  { id: 1, sender: "John", content: "Hello!", timestamp: "10:00 AM" },
+  {
+    id: 2,
+    sender: "Mine",
+    content:
+      "Hi John! How are you, i really want to fuck you now! \n Hi John! How are you, i really want to fuck you now!",
+    // "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
     timestamp: "10:01 AM",
   },
 ]);
-
+const setOpen = (state: boolean) => {
+  isOpen.value = state;
+};
 const inputMessage: Ref<string> = ref("");
 
 const idCount = ref(2);
+
+function deleteMessageBar() {
+  console.log(messageBarIndex.value);
+  const index = messageBarIndex.value;
+  messages.value.splice(index, 1);
+  popoverOpen.value = false;
+}
 
 onMounted(() => {
   const draft = localStorage.getItem("draft");
@@ -124,7 +268,7 @@ onMounted(() => {
 watch(inputMessage, () => {
   setTimeout(() => {
     const textarea = inputTextarea.value;
-    console.log(textarea.scrollHeight);
+    // console.log(textarea.scrollHeight);
     if (textarea) {
       textarea.style.height = "26px";
       textarea.style.height = textarea.scrollHeight + "px";
@@ -132,18 +276,56 @@ watch(inputMessage, () => {
   }, 0);
 });
 
-function sendMessage() {
-  console.log(inputMessage.value);
-  idCount.value++;
-  console.log(idCount.value);
+const popoverOpen = ref(false);
+const event: any = ref(null);
 
-  messages.value.push({
-    id: idCount.value,
-    sender: "Mine",
-    content: inputMessage.value,
-    timestamp: "10:03AM",
-  });
-  inputMessage.value = "";
+const messageBarIndex: Ref<number | undefined> = ref();
+
+const longPressTimeout: any = ref(null);
+
+const startLongPress = (e: Event, index: number) => {
+  longPressTimeout.value = setTimeout(() => {
+    popoverOpen.value = true;
+    event.value = e;
+    messageBarIndex.value = index;
+    const { top } = triggerButton.value[index].getBoundingClientRect();
+    console.log(top);
+    if (top < 110) {
+      popoverPosition.value = "bottom";
+      console.log(top);
+    } else {
+      popoverPosition.value = "top";
+    }
+  }, 500);
+};
+
+const endLongPress = () => {
+  clearTimeout(longPressTimeout.value);
+  // propoverPosition.value = "top"
+};
+
+function isAllWhitespace(str: string) {
+  return /^\s*$/.test(str);
+}
+
+function sendMessage() {
+  console.log(isAllWhitespace(inputMessage.value));
+  if (isAllWhitespace(inputMessage.value) === true) {
+    setOpen(true);
+    inputTextarea.value.focus();
+  }
+  if (isAllWhitespace(inputMessage.value) === false) {
+    // console.log(inputMessage.value);
+    idCount.value++;
+    console.log(idCount.value);
+    messages.value.push({
+      id: idCount.value,
+      sender: "Mine",
+      content: inputMessage.value,
+      timestamp: "10:03AM",
+    });
+    inputMessage.value = "";
+  }
 }
 
 function backPage() {
@@ -153,6 +335,29 @@ function backPage() {
 </script>
 
 <style scoped>
+ion-popover {
+  --background: #3c3a3a;
+  --backdrop-opacity: 0.6;
+  --box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.6);
+  --color: #3c3a3a;
+  --width: fit-content !important;
+}
+
+.topPopover {
+  --offset-y: -12px;
+}
+
+.bottomPopover {
+  --offset-y: 12px;
+}
+
+ion-popover ion-content {
+  --background: #3c3a3a;
+}
+
+ion-popover::part(backdrop) {
+  background-color: rgb(255, 255, 255, 0.1);
+}
 .chatMessages {
   display: flex;
   flex-direction: column;
@@ -173,6 +378,12 @@ span {
   height: fit-content;
   align-content: center;
   flex-wrap: wrap;
+}
+.popoverIconContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 }
 .footerInputContainer {
   background: rgb(255, 255, 255, 0.1);
@@ -198,12 +409,12 @@ span {
   width: 100%;
   display: flex;
   flex-direction: row-reverse;
-  gap: 4vw;
+  gap: 12px;
 }
 .chatMessageOtherBar {
   display: flex;
   width: 100%;
-  gap: 4vw;
+  gap: 12px;
 }
 .chatMessage {
   background-color: #3880ff;
@@ -212,6 +423,7 @@ span {
   padding: 12px;
   font-size: 18px;
   border-radius: 15px;
+  margin-left: 60px;
 }
 .chatAvatar {
 }
@@ -222,5 +434,6 @@ span {
   padding: 12px;
   font-size: 18px;
   border-radius: 15px;
+  margin-right: 60px;
 }
 </style>

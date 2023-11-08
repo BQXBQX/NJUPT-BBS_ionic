@@ -93,63 +93,145 @@
       >
         <div
           class="divider"
-          style="background: rgb(255, 255, 255, 0.5); width: 94vw; height: 1px"
+          style="background: rgb(255, 255, 255, 0.1); width: 94vw; height: 1px"
         ></div>
       </div>
       <div class="postComment">
         <span class="postCommentTotal">共43条评论</span>
-        <ion-list>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item> <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-          <ion-item>item </ion-item>
-        </ion-list>
+        <div
+          lines="none"
+          style="
+            margin-top: 2vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2vh;
+            width: 100%;
+          "
+        >
+          <div
+            class="firstItem"
+            style="margin-bottom: 10px"
+            v-for="item in commentRef"
+            :key="item.id"
+          >
+            <div class="userAvatarContainer">
+              <ion-avatar style="height: 40px; width: 40px">
+                <img
+                  alt="Silhouette of a person's head"
+                  :src="item.userAvatar"
+                />
+              </ion-avatar>
+            </div>
+            <div class="RightContainer">
+              <div class="firstUserCommentContainer">
+                <div class="spanContainer">
+                  <span style="color: rgb(255, 255, 255, 0.5); font-size: 14px">
+                    {{ item.userName }}
+                  </span>
+                  <span style="font-size: 16px; margin-top: 2px">
+                    {{ item.commentMessage }}
+                  </span>
+                  <span style="color: rgb(255, 255, 255, 0.5); font-size: 14px">
+                    {{ item.timestamp }}
+                  </span>
+                </div>
+                <div class="userGoodContainer">
+                  <ion-icon
+                    :icon="heartOutline"
+                    size="default"
+                    style="
+                      color: rgb(255, 255, 255, 0.3);
+                      height: 20px;
+                      width: 20px;
+                    "
+                  >
+                  </ion-icon>
+                  <span style="color: rgb(255, 255, 255, 0.3); font-size: 12px"
+                    >1300</span
+                  >
+                </div>
+              </div>
+
+              <div
+                style="
+                  margin-top: 1.2vh;
+                  width: 100%;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.8vh;
+                "
+              >
+                <div
+                  class="secondItem"
+                  v-for="secondItem in item.commentInside"
+                  :key="secondItem.id"
+                >
+                  <div class="userAvatarContainer">
+                    <ion-avatar style="height: 25px; width: 25px">
+                      <img
+                        alt="Silhouette of a person's head"
+                        :src="secondItem.userAvatar"
+                      />
+                    </ion-avatar>
+                  </div>
+                  <div class="RightContainer">
+                    <div class="firstUserCommentContainer">
+                      <div class="spanContainer">
+                        <span
+                          style="
+                            color: rgb(255, 255, 255, 0.5);
+                            font-size: 14px;
+                          "
+                        >
+                          {{ secondItem.userName }}
+                        </span>
+                        <span style="font-size: 16px; margin-top: 5px">
+                          {{ secondItem.commentMessage }}
+                        </span>
+                        <span
+                          style="
+                            color: rgb(255, 255, 255, 0.5);
+                            font-size: 14px;
+                          "
+                        >
+                          {{ secondItem.timestamp }}
+                        </span>
+                      </div>
+                      <div class="userGoodContainer">
+                        <ion-icon
+                          :icon="heartOutline"
+                          size="default"
+                          style="
+                            color: rgb(255, 255, 255, 0.3);
+                            height: 20px;
+                            width: 20px;
+                          "
+                        >
+                        </ion-icon>
+                        <span
+                          style="
+                            color: rgb(255, 255, 255, 0.3);
+                            font-size: 12px;
+                          "
+                          >1300</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="
+                  height: 1px;
+                  width: 100%;
+                  background-color: rgb(255, 255, 255, 0.1);
+                  margin-top: 2vh;
+                "
+              ></div>
+            </div>
+          </div>
+        </div>
       </div>
     </ion-content>
     <ion-footer>
@@ -165,7 +247,7 @@
             width="200"
             height="200"
             style="
-              height: 40px;
+              height: 44px;
               width: 80px;
               background: rgb(255, 255, 255, 0.1);
               border-radius: 20px 0 0 20px;
@@ -181,7 +263,12 @@
           <ion-input
             color="medium"
             placeholder="说点什么..."
-            style="height: 40px; font-size: 13px"
+            style="
+              height: 40px;
+              font-size: 13px;
+              background: rgb(255, 255, 255, 0.1);
+              border-radius: 0 20px 20px 0;
+            "
           ></ion-input>
           <div class="footerItem">
             <ion-icon
@@ -258,13 +345,172 @@ import {
 
 import router from "@/router";
 
+const commentRef = ref([
+  {
+    id: 2,
+    userAvatar:
+      "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+    userName: "bqx",
+    commentMessage:
+      "这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容",
+    timestamp: "2023.12.11 10:01 AM",
+    commentInside: [
+      {
+        id: 1,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQXBQX",
+        commentMessage:
+          "这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "",
+      },
+      {
+        id: 2,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQX",
+        commentMessage: "hello BQXBQX!",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "BQXBQX",
+      },
+    ],
+  },
+  {
+    id: 2,
+    userAvatar:
+      "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+    userName: "bqx",
+    commentMessage: "hello world! I really want to fuck you!!!",
+    timestamp: "2023.12.11 10:01 AM",
+    commentInside: [
+      {
+        id: 1,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQXBQX",
+        commentMessage: "HI world! cool😎",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "",
+      },
+      {
+        id: 2,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQX",
+        commentMessage: "hello BQXBQX!",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "BQXBQX",
+      },
+    ],
+  },
+  {
+    id: 2,
+    userAvatar:
+      "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+    userName: "bqx",
+    commentMessage: "hello world! I really want to fuck you!!!",
+    timestamp: "2023.12.11 10:01 AM",
+    commentInside: [
+      {
+        id: 1,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQXBQX",
+        commentMessage: "HI world! cool😎",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "",
+      },
+      {
+        id: 2,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQX",
+        commentMessage: "hello BQXBQX!",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "BQXBQX",
+      },
+    ],
+  },
+  {
+    id: 2,
+    userAvatar:
+      "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+    userName: "bqx",
+    commentMessage: "hello world!",
+    timestamp: "2023.12.11 10:01 AM",
+    commentInside: [
+      {
+        id: 1,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQXBQX",
+        commentMessage: "HI world!",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "",
+      },
+      {
+        id: 2,
+        userAvatar:
+          "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+
+        userName: "BQX",
+        commentMessage: "hello BQXBQX!",
+        timestamp: "2023.12.11 10:01 AM",
+        toUserName: "BQXBQX",
+      },
+    ],
+  },
+]);
+
 const dividerRef = <any>ref(null);
 
 function clickSlider() {
   dividerRef.value.scrollIntoView({ behavior: "smooth" });
 }
 </script>
-<style>
+<style scoped>
+.firstUserCommentContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.spanContainer {
+  display: flex;
+  flex-direction: column;
+}
+.userGoodContainer {
+  display: flex;
+  margin-left: 2vw;
+  flex-direction: column;
+  align-items: center;
+  height: fit-content;
+}
+ion-item {
+  --padding-start: 0;
+  --padding-top: 1vh;
+  align-items: flex-start;
+}
+.firstItem {
+  display: flex;
+  /* flex-direction: row-reverse; */
+  align-items: flex-start;
+}
+.RightContainer {
+  flex-grow: 1;
+  margin-left: 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 .sliderImgContainer {
   display: flex;
   justify-content: center;
@@ -272,6 +518,9 @@ function clickSlider() {
 }
 img {
   max-height: 50vh;
+}
+.secondItem {
+  display: flex;
 }
 .mySwiper {
   width: 100%;
@@ -297,6 +546,9 @@ img {
   background: rgb(255, 255, 255, 0.1);
   border-radius: 0 20px 20px 0;
 }
+.userAvatarContainer {
+  display: flex;
+}
 .footerComment {
   display: flex;
   align-items: center;
@@ -321,5 +573,8 @@ img {
 .footerIcon {
   height: 25px;
   width: 25px;
+}
+input {
+  height: 40px;
 }
 </style>
