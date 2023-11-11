@@ -196,6 +196,7 @@
         <swiper class="mySwiper" @swiper="onSwiper">
           <swiper-slide>
             <ion-content
+              class="innerContent"
               style="margin-top: 5px"
               :scrollY="isInnerActive"
               :fullscreen="true"
@@ -203,12 +204,8 @@
               :scrollEvents="true"
               @ionScroll="handleInnerScroll"
             >
-              <div
-                class="anchor"
-                style="width: 100%"
-                ref="slideContentItem"
-              ></div>
               <new-water-fall
+                ref="slideContentItem"
                 :list="list"
                 :waterfallBreakpoints="waterfallBreakpoints"
               ></new-water-fall>
@@ -425,6 +422,21 @@ function onSegmentChange(event: any) {
   swiperRef.value.slideTo(segmentIndex);
 }
 
+onMounted(() => {
+  console.log(window.innerHeight);
+  const innerHeight = window.innerHeight - 50 - 44 - 55;
+  console.log(innerHeight);
+  innerContent.value.$el.style.height = innerHeight + "px";
+  console.log(window.innerWidth);
+  const segmentPaddingStart = (window.innerWidth - 210) / 2;
+  console.log(segmentPaddingStart);
+  console.log(dividerRef.value.$el);
+  dividerRef.value.$el.style.setProperty(
+    "--padding-start",
+    segmentPaddingStart + 'px'
+  );
+});
+
 const slideContentItem = ref();
 const outerContent = ref();
 const innerContent = ref();
@@ -439,20 +451,22 @@ const onSwiper = (swiper: any) => {
 };
 
 function handleInnerScroll() {
-  const top = slideContentItem.value.getBoundingClientRect().top;
-  // console.log(top);
+  // console.log(slideContentItem.value.$el);
+  const top = slideContentItem.value.$el.getBoundingClientRect().top;
+  console.log(top);
   setTimeout(() => {
-  if(top > 93.8){
-    isOuterActive.value = true;
-    isInnerActive.value = false;
-    // console.log(isInnerActive.value);
-    // console.log('hello');
-  }
+    if (top > 93) {
+      isOuterActive.value = true;
+      isInnerActive.value = false;
+      console.log(isInnerActive.value);
+      console.log("hello");
+    }
   }, 0);
 }
 
 function handleOuterScroll() {
   const top = dividerRef.value.$el.getBoundingClientRect().top;
+  console.log(top);
   if (top === 44) {
     // console.log("hello");
     isInnerActive.value = true;
@@ -466,6 +480,7 @@ function handleOuterScroll() {
   margin: 2vh 4vw;
 }
 .mineMessage {
+  height: 44px;
   margin: 2vh 4vw;
   display: flex;
   gap: 4vw;
@@ -517,7 +532,7 @@ ion-segment {
 }
 .mineNavContainer {
   height: 30px;
-  width: 50vw;
+  width: 210px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -525,7 +540,6 @@ ion-segment {
 }
 ion-item-divider {
   --padding-top: 0.8vh;
-  --padding-start: 25vw;
   --padding-bottom: 0.8vh;
   height: 50px;
 }
@@ -535,9 +549,6 @@ ion-item-divider {
 .swiper {
   height: fit-content;
   width: 100%;
-}
-ion-content {
-  height: 782px;
 }
 ion-segment-button.ios {
   --color: #428cff;

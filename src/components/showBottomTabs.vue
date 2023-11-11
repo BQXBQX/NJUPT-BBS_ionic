@@ -1,10 +1,8 @@
 <template>
   <ion-page>
     <ion-tabs>
-      
       <ion-router-outlet></ion-router-outlet>
-
-      <ion-tab-bar slot="bottom" style="height: 56px;">
+      <ion-tab-bar slot="bottom" style="height: 55px">
         <ion-tab-button tab="home" href="/home">
           <ion-icon :icon="home" />
           <!-- <ion-label>首页</ion-label> -->
@@ -45,13 +43,11 @@ import {
   keypad,
   chatboxEllipsesOutline,
   personOutline,
-  gridOutline
+  gridOutline,
 } from "ionicons/icons";
-
-
 </script>
 <style scoped>
-ion-icon{
+ion-icon {
   height: 25px;
   width: 25px;
 }

@@ -253,7 +253,7 @@ ion-item-divider {
   width: 100%;
 }
 ion-content {
-  height: 782px;
+  height: 694.33px;
 }
 ion-segment-button.ios {
   --color: #428cff;
