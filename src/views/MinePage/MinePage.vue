@@ -457,7 +457,7 @@ onMounted(() => {
   rectangleElement.addEventListener("touchmove", handleTouchMove);
   rectangleElement.addEventListener("touchend", handleTouchEnd);
 });
-
+//这里主要使用的是手势滑动来实现页面的滚动的切换，和滑轮无关
 function handleTouchStart(event: any) {
   const touch = event.touches[0];
   console.log(touch);
@@ -489,8 +489,18 @@ function handleTouchMove(event: any) {
 }
 
 function handleTouchEnd(event: any) {
-  // 通过upCount实现再次下拉返回首页的功能
-  if (innerTop.value > 93 && touchEvent.value.deltaY > 0 && upCount.value > 0) {
+  // 通过upCount实现再次下拉返回用户信息的功能
+  console.log("touchEvent.deltaY:", touchEvent.value.deltaY);
+  console.log("touchEvent.deltaX:", touchEvent.value.deltaX);
+  //这里进行y轴和x轴滑屏距离进行比较，来判断用户是想往上滑还是左右滑动
+  const xSlide = Math.abs(touchEvent.value.deltaX);
+  const ySlide = Math.abs(touchEvent.value.deltaY);
+  if (
+    innerTop.value > 93 &&
+    touchEvent.value.deltaY > 0 &&
+    upCount.value > 0 &&
+    ySlide > xSlide
+  ) {
     isOuterActive.value = true;
     isInnerActive.value = false;
     upCount.value = 0;
@@ -544,30 +554,24 @@ function handleOuterScroll() {
   }
 }
 
-watch(segment,()=>{
+watch(segment, () => {
   console.log(segment.value);
-  console.log("innerTop.value",innerTop.value);
-  if (
-    innerTop.value > 93 &&
-    isOuterActive.value === false
-  ) {
+  console.log("innerTop.value", innerTop.value);
+  if (innerTop.value > 93 && isOuterActive.value === false) {
     console.log(upCount);
     console.log("再次下拉");
     upCount.value++;
   }
-})
-watch(isOuterActive,()=>{
-  console.log("innerTop.value",innerTop.value);
-  if (
-    innerTop.value > 93 &&
-    isOuterActive.value === false
-  ) {
-    console.log(upCount);
-    console.log("再次下拉");
-    upCount.value++;
-  }
-})
+});
 
+watch(isOuterActive, () => {
+  console.log("innerTop.value", innerTop.value);
+  if (innerTop.value > 93 && isOuterActive.value === false) {
+    console.log(upCount);
+    console.log("再次下拉");
+    upCount.value++;
+  }
+});
 </script>
 
 <style scoped>
