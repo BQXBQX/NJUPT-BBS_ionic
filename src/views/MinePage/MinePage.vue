@@ -414,6 +414,7 @@ function onSegmentChange(event: any) {
   const segmentIndex: any = event.detail.value;
   console.log(segmentIndex);
   swiperRef.value.slideTo(segmentIndex);
+  innerTop.value = 94;
 }
 
 const setOpen = (state: boolean) => {
@@ -512,6 +513,7 @@ const onSwiper = (swiper: any) => {
     activeIndex.value = event.activeIndex;
     console.log(activeIndex.value);
     segment.value = activeIndex.value.toString();
+    innerTop.value = 94;
   });
 };
 
@@ -523,16 +525,49 @@ function handleInnerScroll(index: number) {
   // console.log(rectangleRef.value.$el);
   const objectPage = [slide1Content, slide2Content, slide3Content];
   console.log("pageIndex:", index);
-  innerTop.value = objectPage[index-1].value.$el.getBoundingClientRect().top;
+  innerTop.value = objectPage[index - 1].value.$el.getBoundingClientRect().top;
   console.log("innerTop.value:", innerTop.value);
-
   console.log("innerScroll");
 }
 
 function handleOuterScroll() {
   outerTop.value = dividerRef.value.$el.getBoundingClientRect().top;
   console.log(outerTop.value);
+  if (
+    innerTop.value > 93 &&
+    touchEvent.value.deltaY > 0 &&
+    isOuterActive.value === false
+  ) {
+    console.log(upCount);
+    console.log("再次下拉");
+    upCount.value++;
+  }
 }
+
+watch(segment,()=>{
+  console.log(segment.value);
+  console.log("innerTop.value",innerTop.value);
+  if (
+    innerTop.value > 93 &&
+    isOuterActive.value === false
+  ) {
+    console.log(upCount);
+    console.log("再次下拉");
+    upCount.value++;
+  }
+})
+watch(isOuterActive,()=>{
+  console.log("innerTop.value",innerTop.value);
+  if (
+    innerTop.value > 93 &&
+    isOuterActive.value === false
+  ) {
+    console.log(upCount);
+    console.log("再次下拉");
+    upCount.value++;
+  }
+})
+
 </script>
 
 <style scoped>
