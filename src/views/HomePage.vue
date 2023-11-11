@@ -241,6 +241,28 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
+ion-segment{
+  background: rgb(10,10,10,1) ;
+}
+
+  ion-segment-button::part(indicator-background) {
+    background: #428cff;
+    font-weight: 1000;
+
+  }
+  ion-segment-button.ios::part(native) {
+    color: #428cff;
+    font-weight: 1000;
+
+  }
+
+  .segment-button-checked.ios::part(native) {
+    color: #fff;
+  }
+
+  ion-segment-button.ios::part(indicator-background) {
+    border-radius: 20px;
+  }
 .swiper {
   height: 100%;
 }
