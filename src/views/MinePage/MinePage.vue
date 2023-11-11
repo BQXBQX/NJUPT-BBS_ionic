@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page ref="rectangleRef">
     <ion-menu content-id="main-content">
       <ion-content class="ion-padding">
         <ion-list lines="inset" style="margin-top: 5vh; margin-bottom: 1vh">
@@ -202,7 +202,7 @@
               :fullscreen="true"
               ref="innerContentPage1"
               :scrollEvents="true"
-              @ionScroll="handleInnerScroll"
+              @ionScroll="handleInnerScroll(1)"
             >
               <span
                 style="
@@ -214,7 +214,7 @@
                 >{{ touchEvent.deltaY }}</span
               >
               <new-water-fall
-                ref="rectangleRef"
+                ref="slide1Content"
                 :list="list"
                 :waterfallBreakpoints="waterfallBreakpoints"
               ></new-water-fall>
@@ -228,10 +228,10 @@
               :fullscreen="true"
               ref="innerContentPage2"
               :scrollEvents="true"
-              @ionScroll="handleInnerScroll"
+              @ionScroll="handleInnerScroll(2)"
             >
               <new-water-fall
-                ref="rectangleRef"
+                ref="slide2Content"
                 :list="list"
                 :waterfallBreakpoints="waterfallBreakpoints"
               ></new-water-fall>
@@ -245,15 +245,24 @@
               :fullscreen="true"
               ref="innerContentPage3"
               :scrollEvents="true"
-              @ionScroll="handleInnerScroll"
+              @ionScroll="handleInnerScroll(3)"
             >
               <new-water-fall
-                ref="rectangleRef"
+                ref="slide3Content"
                 :list="list"
                 :waterfallBreakpoints="waterfallBreakpoints"
               ></new-water-fall>
-            </ion-content>          </swiper-slide>
+            </ion-content>
+          </swiper-slide>
         </swiper>
+        <ion-toast
+          position="top"
+          :is-open="isToastPage1Open"
+          message="再次下拉，返回用户信息界面"
+          :duration="1000"
+          color="warning"
+          @didDismiss="setOpen(false)"
+        ></ion-toast>
       </ion-content>
     </ion-page>
   </ion-page>
@@ -279,8 +288,11 @@ import {
   IonButtons,
   IonLabel,
   IonItemDivider,
+  IonToast,
   IonModal,
   IonInput,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/vue";
 import {
   settingsOutline,
@@ -375,86 +387,22 @@ const list = ref([
     src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
   },
 ]);
-const list1 = ref([
-  {
-    src: "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.fmxjTlk4DBYSndlbVAijUwAAAA?pid=ImgDet&w=400&h=400&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.Za3YUaveix0Rq5cRsMdyMwHaNK?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.NFzL26srIgdtBhDlZdzRpAHaLH?pid=ImgDet&w=1200&h=1800&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/R.160cc2e61974726b7cf9cc7fdfe0ac25?rik=VsqzLjCbX%2fbl%2bw&riu=http%3a%2f%2fvault.snh48.today%2fking-include%2fuploads%2f2019%2f07%2f005yqakfgy1g55fq3lltjj32yo4g0npj-687932.jpg&ehk=DaBrt6F9HVhbR3URkjQCKxbn4SFsef4525VWR2Wcxrg%3d&risl=&pid=ImgRaw&r=0",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-  {
-    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
-  },
-]);
 const segment = ref("0");
 const swiperRef: any = ref(null);
 const activeIndex = ref(null);
 const innerContentPage1 = ref();
 const innerContentPage2 = ref();
 const innerContentPage3 = ref();
-
+const slide1Content = ref();
+const slide2Content = ref();
+const slide3Content = ref();
 const rectangleRef = ref();
 const innerTop = ref(94);
 const outerTop = ref();
 const outerContent = ref();
 const isInnerActive = ref(false);
 const isOuterActive = ref(true);
-// gesture.enable();
-
+const isToastPage1Open = ref(false);
 const touchEvent = ref({
   deltaX: 0,
   deltaY: 0,
@@ -467,6 +415,10 @@ function onSegmentChange(event: any) {
   console.log(segmentIndex);
   swiperRef.value.slideTo(segmentIndex);
 }
+
+const setOpen = (state: boolean) => {
+  isToastPage1Open.value = state;
+};
 
 onUpdated(() => {
   console.log(window.innerHeight);
@@ -502,6 +454,7 @@ onMounted(() => {
 
   rectangleElement.addEventListener("touchstart", handleTouchStart);
   rectangleElement.addEventListener("touchmove", handleTouchMove);
+  rectangleElement.addEventListener("touchend", handleTouchEnd);
 });
 
 function handleTouchStart(event: any) {
@@ -509,7 +462,13 @@ function handleTouchStart(event: any) {
   console.log(touch);
   startX = touch.clientX;
   startY = touch.clientY;
+  // if (innerTop.value > 93 && touchEvent.value.deltaY > 0) {
+  //   isOuterActive.value = true;
+  //   isInnerActive.value = false;
+  // }
 }
+
+const upCount = ref(0);
 
 function handleTouchMove(event: any) {
   const touch = event.touches[0];
@@ -519,13 +478,31 @@ function handleTouchMove(event: any) {
   const deltaY = currentY - startY;
   touchEvent.value.deltaX = deltaX;
   touchEvent.value.deltaY = deltaY;
-  if (innerTop.value > 93 && touchEvent.value.deltaY > 0) {
-    isOuterActive.value = true;
-    isInnerActive.value = false;
-  }
+  console.log(outerTop.value);
   if (outerTop.value === 44 && touchEvent.value.deltaY < 0) {
+    console.log("hello");
     isOuterActive.value = false;
     isInnerActive.value = true;
+    console.log(isInnerActive.value);
+  }
+}
+
+function handleTouchEnd(event: any) {
+  // 通过upCount实现再次下拉返回首页的功能
+  if (innerTop.value > 93 && touchEvent.value.deltaY > 0 && upCount.value > 0) {
+    isOuterActive.value = true;
+    isInnerActive.value = false;
+    upCount.value = 0;
+    setOpen(true);
+  }
+  if (
+    innerTop.value > 93 &&
+    touchEvent.value.deltaY > 0 &&
+    isOuterActive.value === false
+  ) {
+    console.log(upCount);
+    console.log("再次下拉");
+    upCount.value++;
   }
 }
 
@@ -534,30 +511,27 @@ const onSwiper = (swiper: any) => {
   swiper.on("slideChange", function (event: any) {
     activeIndex.value = event.activeIndex;
     console.log(activeIndex.value);
-    segment.value = activeIndex.value.toString()
+    segment.value = activeIndex.value.toString();
   });
 };
 
-function handleInnerScroll() {
+watch(isInnerActive, () => {
+  console.log("isInnerActive:", isInnerActive.value);
+});
+
+function handleInnerScroll(index: number) {
   // console.log(rectangleRef.value.$el);
-  innerTop.value = rectangleRef.value.$el.getBoundingClientRect().top;
-  console.log(innerTop.value);
-  setTimeout(() => {
-    if (innerTop.value > 93) {
-      isOuterActive.value = true;
-      isInnerActive.value = false;
-      console.log(isInnerActive.value);
-    }
-  }, 0);
+  const objectPage = [slide1Content, slide2Content, slide3Content];
+  console.log("pageIndex:", index);
+  innerTop.value = objectPage[index-1].value.$el.getBoundingClientRect().top;
+  console.log("innerTop.value:", innerTop.value);
+
+  console.log("innerScroll");
 }
 
 function handleOuterScroll() {
   outerTop.value = dividerRef.value.$el.getBoundingClientRect().top;
   console.log(outerTop.value);
-  if (outerTop.value === 44) {
-    isInnerActive.value = true;
-    isOuterActive.value = false;
-  }
 }
 </script>
 
