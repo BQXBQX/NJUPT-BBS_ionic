@@ -200,30 +200,59 @@
               style="margin-top: 5px"
               :scrollY="isInnerActive"
               :fullscreen="true"
-              ref="innerContent"
+              ref="innerContentPage1"
               :scrollEvents="true"
               @ionScroll="handleInnerScroll"
             >
+              <span
+                style="
+                  position: fixed;
+                  z-index: 710;
+                  color: navy;
+                  font-size: 80px;
+                "
+                >{{ touchEvent.deltaY }}</span
+              >
               <new-water-fall
-                ref="slideContentItem"
+                ref="rectangleRef"
                 :list="list"
                 :waterfallBreakpoints="waterfallBreakpoints"
               ></new-water-fall>
             </ion-content>
           </swiper-slide>
           <swiper-slide>
-            <ion-content>
-              <div
-                style="height: 1000px; width: 100%; background-color: aqua"
-              ></div>
-              <div
-                style="height: 1000px; width: 100%; background-color: red"
-              ></div>
+            <ion-content
+              class="innerContent"
+              style="margin-top: 5px"
+              :scrollY="isInnerActive"
+              :fullscreen="true"
+              ref="innerContentPage2"
+              :scrollEvents="true"
+              @ionScroll="handleInnerScroll"
+            >
+              <new-water-fall
+                ref="rectangleRef"
+                :list="list"
+                :waterfallBreakpoints="waterfallBreakpoints"
+              ></new-water-fall>
             </ion-content>
           </swiper-slide>
           <swiper-slide>
-            <ion-content> </ion-content>
-          </swiper-slide>
+            <ion-content
+              class="innerContent"
+              style="margin-top: 5px"
+              :scrollY="isInnerActive"
+              :fullscreen="true"
+              ref="innerContentPage3"
+              :scrollEvents="true"
+              @ionScroll="handleInnerScroll"
+            >
+              <new-water-fall
+                ref="rectangleRef"
+                :list="list"
+                :waterfallBreakpoints="waterfallBreakpoints"
+              ></new-water-fall>
+            </ion-content>          </swiper-slide>
         </swiper>
       </ion-content>
     </ion-page>
@@ -231,8 +260,7 @@
 </template>
 
 <script setup lang="ts">
-import myPostContainer from "../../components/myPostContainer/myPostContainer.vue";
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted, nextTick, onUpdated, watch } from "vue";
 import {
   IonSegment,
   IonSegmentButton,
@@ -415,60 +443,118 @@ const list1 = ref([
 const segment = ref("0");
 const swiperRef: any = ref(null);
 const activeIndex = ref(null);
+const innerContentPage1 = ref();
+const innerContentPage2 = ref();
+const innerContentPage3 = ref();
 
+const rectangleRef = ref();
+const innerTop = ref(94);
+const outerTop = ref();
+const outerContent = ref();
+const isInnerActive = ref(false);
+const isOuterActive = ref(true);
+// gesture.enable();
+
+const touchEvent = ref({
+  deltaX: 0,
+  deltaY: 0,
+});
+
+let startX = 0;
+let startY = 0;
 function onSegmentChange(event: any) {
   const segmentIndex: any = event.detail.value;
-  // console.log(segmentIndex);
+  console.log(segmentIndex);
   swiperRef.value.slideTo(segmentIndex);
 }
+
+onUpdated(() => {
+  console.log(window.innerHeight);
+  const innerHeight = window.innerHeight - 50 - 44 - 55;
+  console.log(innerHeight);
+  innerContentPage1.value.$el.style.height = innerHeight + "px";
+  innerContentPage2.value.$el.style.height = innerHeight + "px";
+  innerContentPage3.value.$el.style.height = innerHeight + "px";
+  console.log(window.innerWidth);
+  const segmentPaddingStart = (window.innerWidth - 210) / 2;
+  console.log(segmentPaddingStart);
+  console.log(dividerRef.value.$el);
+});
 
 onMounted(() => {
   console.log(window.innerHeight);
   const innerHeight = window.innerHeight - 50 - 44 - 55;
   console.log(innerHeight);
-  innerContent.value.$el.style.height = innerHeight + "px";
+  innerContentPage1.value.$el.style.height = innerHeight + "px";
+  innerContentPage2.value.$el.style.height = innerHeight + "px";
+  innerContentPage3.value.$el.style.height = innerHeight + "px";
   console.log(window.innerWidth);
   const segmentPaddingStart = (window.innerWidth - 210) / 2;
   console.log(segmentPaddingStart);
   console.log(dividerRef.value.$el);
   dividerRef.value.$el.style.setProperty(
     "--padding-start",
-    segmentPaddingStart + 'px'
+    segmentPaddingStart + "px"
   );
+  console.log(rectangleRef.value.$el);
+
+  const rectangleElement = rectangleRef.value.$el;
+
+  rectangleElement.addEventListener("touchstart", handleTouchStart);
+  rectangleElement.addEventListener("touchmove", handleTouchMove);
 });
 
-const slideContentItem = ref();
-const outerContent = ref();
-const innerContent = ref();
-const isInnerActive = ref(false);
-const isOuterActive = ref(true);
+function handleTouchStart(event: any) {
+  const touch = event.touches[0];
+  console.log(touch);
+  startX = touch.clientX;
+  startY = touch.clientY;
+}
+
+function handleTouchMove(event: any) {
+  const touch = event.touches[0];
+  const currentX = touch.clientX;
+  const currentY = touch.clientY;
+  const deltaX = currentX - startX;
+  const deltaY = currentY - startY;
+  touchEvent.value.deltaX = deltaX;
+  touchEvent.value.deltaY = deltaY;
+  if (innerTop.value > 93 && touchEvent.value.deltaY > 0) {
+    isOuterActive.value = true;
+    isInnerActive.value = false;
+  }
+  if (outerTop.value === 44 && touchEvent.value.deltaY < 0) {
+    isOuterActive.value = false;
+    isInnerActive.value = true;
+  }
+}
 
 const onSwiper = (swiper: any) => {
   swiperRef.value = swiper;
-  swiper.params.loop = true;
-  console.log(swiper.params);
-  swiperRef.value.update();
+  swiper.on("slideChange", function (event: any) {
+    activeIndex.value = event.activeIndex;
+    console.log(activeIndex.value);
+    segment.value = activeIndex.value.toString()
+  });
 };
 
 function handleInnerScroll() {
-  // console.log(slideContentItem.value.$el);
-  const top = slideContentItem.value.$el.getBoundingClientRect().top;
-  console.log(top);
+  // console.log(rectangleRef.value.$el);
+  innerTop.value = rectangleRef.value.$el.getBoundingClientRect().top;
+  console.log(innerTop.value);
   setTimeout(() => {
-    if (top > 93) {
+    if (innerTop.value > 93) {
       isOuterActive.value = true;
       isInnerActive.value = false;
       console.log(isInnerActive.value);
-      console.log("hello");
     }
   }, 0);
 }
 
 function handleOuterScroll() {
-  const top = dividerRef.value.$el.getBoundingClientRect().top;
-  console.log(top);
-  if (top === 44) {
-    // console.log("hello");
+  outerTop.value = dividerRef.value.$el.getBoundingClientRect().top;
+  console.log(outerTop.value);
+  if (outerTop.value === 44) {
     isInnerActive.value = true;
     isOuterActive.value = false;
   }
