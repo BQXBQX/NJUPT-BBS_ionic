@@ -37,7 +37,7 @@
           </ion-item>
         </ion-list>
         <ion-list lines="none" class="menuBottom">
-          <ion-item  @click="router.push('/setting')">
+          <ion-item @click="router.push('/setting')">
             <ion-label
               class="ionLabel"
               style="
@@ -99,8 +99,14 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content :fullscreen="true">
-        <ion-header collapse="condense">
+      <ion-content
+        :scrollY="isOuterActive"
+        :fullscreen="true"
+        ref="outerContent"
+        :scrollEvents="true"
+        @ionScroll="handleOuterScroll"
+      >
+        <ion-header collapse="condense" style="margin-top: 2vh">
           <ion-toolbar>
             <ion-title size="large">
               <div style="display: flex; gap: 5vw">
@@ -126,6 +132,9 @@
             </ion-title>
           </ion-toolbar>
         </ion-header>
+        <div class="PersonalProfileContainer">
+          <span>点击这里，填写简介</span>
+        </div>
         <div class="mineMessage">
           <div class="mineMessageItem">
             <span class="mineMessageItemSpan">52</span>
@@ -165,40 +174,96 @@
             </ion-button>
           </div>
         </div>
-
-        <ion-list>
-          <ion-item-divider ref="dividerRef" :sticky="true" color="primary">
-            <ion-label>this is user message</ion-label>
-          </ion-item-divider>
-          <ion-item>Item 1</ion-item>
-          <ion-item>Item 2</ion-item>
-          <ion-item>Item 3</ion-item>
-          <ion-item>Item 4</ion-item>
-          <ion-item>Item 5</ion-item>
-          <ion-item>Item 6</ion-item>
-          <ion-item>Item 7</ion-item>
-          <ion-item>Item 8</ion-item>
-          <ion-item>Item 9</ion-item>
-          <ion-item>Item 10</ion-item>
-          <ion-item>Item 11</ion-item>
-          <ion-item>Item 12</ion-item>
-          <ion-item>Item 13</ion-item>
-          <ion-item>Item 14</ion-item>
-          <ion-item>Item 15</ion-item>
-          <ion-item>Item 16</ion-item>
-          <ion-item>Item 17</ion-item>
-          <ion-item>Item 18</ion-item>
-          <ion-item>Item 19</ion-item>
-          <ion-item>Item 20</ion-item>
-        </ion-list>
+        <ion-item-divider ref="dividerRef" :sticky="true">
+          <div class="mineNavContainer">
+            <ion-segment
+              style="width: 100%; background: rgb(10, 10, 10, 1)"
+              :value="segment"
+              @ionChange="onSegmentChange"
+            >
+              <ion-segment-button value="0">
+                <span>笔记</span>
+              </ion-segment-button>
+              <ion-segment-button value="1">
+                <span>收藏</span>
+              </ion-segment-button>
+              <ion-segment-button value="2">
+                <span>点赞</span>
+              </ion-segment-button>
+            </ion-segment>
+          </div>
+        </ion-item-divider>
+        <swiper class="mySwiper" @swiper="onSwiper">
+          <swiper-slide>
+            <ion-content
+              class="innerContent"
+              style="margin-top: 5px"
+              :scrollY="isInnerActive"
+              :fullscreen="true"
+              ref="innerContentPage1"
+              :scrollEvents="true"
+              @ionScroll="handleInnerScroll"
+            >
+              <span
+                style="
+                  position: fixed;
+                  z-index: 710;
+                  color: navy;
+                  font-size: 80px;
+                "
+                >{{ touchEvent.deltaY }}</span
+              >
+              <new-water-fall
+                ref="rectangleRef"
+                :list="list"
+                :waterfallBreakpoints="waterfallBreakpoints"
+              ></new-water-fall>
+            </ion-content>
+          </swiper-slide>
+          <swiper-slide>
+            <ion-content
+              class="innerContent"
+              style="margin-top: 5px"
+              :scrollY="isInnerActive"
+              :fullscreen="true"
+              ref="innerContentPage2"
+              :scrollEvents="true"
+              @ionScroll="handleInnerScroll"
+            >
+              <new-water-fall
+                ref="rectangleRef"
+                :list="list"
+                :waterfallBreakpoints="waterfallBreakpoints"
+              ></new-water-fall>
+            </ion-content>
+          </swiper-slide>
+          <swiper-slide>
+            <ion-content
+              class="innerContent"
+              style="margin-top: 5px"
+              :scrollY="isInnerActive"
+              :fullscreen="true"
+              ref="innerContentPage3"
+              :scrollEvents="true"
+              @ionScroll="handleInnerScroll"
+            >
+              <new-water-fall
+                ref="rectangleRef"
+                :list="list"
+                :waterfallBreakpoints="waterfallBreakpoints"
+              ></new-water-fall>
+            </ion-content>          </swiper-slide>
+        </swiper>
       </ion-content>
     </ion-page>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, nextTick, onUpdated, watch } from "vue";
 import {
+  IonSegment,
+  IonSegmentButton,
   IonPage,
   IonContent,
   IonHeader,
@@ -215,7 +280,7 @@ import {
   IonLabel,
   IonItemDivider,
   IonModal,
-  IonInput
+  IonInput,
 } from "@ionic/vue";
 import {
   settingsOutline,
@@ -226,18 +291,282 @@ import {
   addCircleOutline,
   golfOutline,
   handLeftOutline,
+  documentOutline,
+  bookmarksOutline,
+  starOutline,
+  search,
+  logoHackernews,
 } from "ionicons/icons";
 import router from "@/router";
 
 const dividerRef: any = ref(null);
+import newWaterFall from "@/components/newWaterFall/newWaterFall.vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
 
-// const cancel = () => {
-//   modal.value.dismiss(null, 'cancel');
-// };
+// Import Swiper styles
+import "swiper/css";
+const waterfallBreakpoints = ref({
+  800: {
+    rowPerView: 2,
+  },
+});
+const list = ref([
+  {
+    src: "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.fmxjTlk4DBYSndlbVAijUwAAAA?pid=ImgDet&w=400&h=400&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.Za3YUaveix0Rq5cRsMdyMwHaNK?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.NFzL26srIgdtBhDlZdzRpAHaLH?pid=ImgDet&w=1200&h=1800&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/R.160cc2e61974726b7cf9cc7fdfe0ac25?rik=VsqzLjCbX%2fbl%2bw&riu=http%3a%2f%2fvault.snh48.today%2fking-include%2fuploads%2f2019%2f07%2f005yqakfgy1g55fq3lltjj32yo4g0npj-687932.jpg&ehk=DaBrt6F9HVhbR3URkjQCKxbn4SFsef4525VWR2Wcxrg%3d&risl=&pid=ImgRaw&r=0",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+]);
+const list1 = ref([
+  {
+    src: "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.fmxjTlk4DBYSndlbVAijUwAAAA?pid=ImgDet&w=400&h=400&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.JiBJSDs7Nq9RvnLJhPvobQHaLH?pid=ImgDet&w=800&h=1200&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.Za3YUaveix0Rq5cRsMdyMwHaNK?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.NFzL26srIgdtBhDlZdzRpAHaLH?pid=ImgDet&w=1200&h=1800&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/R.160cc2e61974726b7cf9cc7fdfe0ac25?rik=VsqzLjCbX%2fbl%2bw&riu=http%3a%2f%2fvault.snh48.today%2fking-include%2fuploads%2f2019%2f07%2f005yqakfgy1g55fq3lltjj32yo4g0npj-687932.jpg&ehk=DaBrt6F9HVhbR3URkjQCKxbn4SFsef4525VWR2Wcxrg%3d&risl=&pid=ImgRaw&r=0",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+  {
+    src: "https://th.bing.com/th/id/OIP.427teaJRmIkEP1pvgrtV_gHaLH?pid=ImgDet&rs=1",
+  },
+]);
+const segment = ref("0");
+const swiperRef: any = ref(null);
+const activeIndex = ref(null);
+const innerContentPage1 = ref();
+const innerContentPage2 = ref();
+const innerContentPage3 = ref();
+
+const rectangleRef = ref();
+const innerTop = ref(94);
+const outerTop = ref();
+const outerContent = ref();
+const isInnerActive = ref(false);
+const isOuterActive = ref(true);
+// gesture.enable();
+
+const touchEvent = ref({
+  deltaX: 0,
+  deltaY: 0,
+});
+
+let startX = 0;
+let startY = 0;
+function onSegmentChange(event: any) {
+  const segmentIndex: any = event.detail.value;
+  console.log(segmentIndex);
+  swiperRef.value.slideTo(segmentIndex);
+}
+
+onUpdated(() => {
+  console.log(window.innerHeight);
+  const innerHeight = window.innerHeight - 50 - 44 - 55;
+  console.log(innerHeight);
+  innerContentPage1.value.$el.style.height = innerHeight + "px";
+  innerContentPage2.value.$el.style.height = innerHeight + "px";
+  innerContentPage3.value.$el.style.height = innerHeight + "px";
+  console.log(window.innerWidth);
+  const segmentPaddingStart = (window.innerWidth - 210) / 2;
+  console.log(segmentPaddingStart);
+  console.log(dividerRef.value.$el);
+});
+
+onMounted(() => {
+  console.log(window.innerHeight);
+  const innerHeight = window.innerHeight - 50 - 44 - 55;
+  console.log(innerHeight);
+  innerContentPage1.value.$el.style.height = innerHeight + "px";
+  innerContentPage2.value.$el.style.height = innerHeight + "px";
+  innerContentPage3.value.$el.style.height = innerHeight + "px";
+  console.log(window.innerWidth);
+  const segmentPaddingStart = (window.innerWidth - 210) / 2;
+  console.log(segmentPaddingStart);
+  console.log(dividerRef.value.$el);
+  dividerRef.value.$el.style.setProperty(
+    "--padding-start",
+    segmentPaddingStart + "px"
+  );
+  console.log(rectangleRef.value.$el);
+
+  const rectangleElement = rectangleRef.value.$el;
+
+  rectangleElement.addEventListener("touchstart", handleTouchStart);
+  rectangleElement.addEventListener("touchmove", handleTouchMove);
+});
+
+function handleTouchStart(event: any) {
+  const touch = event.touches[0];
+  console.log(touch);
+  startX = touch.clientX;
+  startY = touch.clientY;
+}
+
+function handleTouchMove(event: any) {
+  const touch = event.touches[0];
+  const currentX = touch.clientX;
+  const currentY = touch.clientY;
+  const deltaX = currentX - startX;
+  const deltaY = currentY - startY;
+  touchEvent.value.deltaX = deltaX;
+  touchEvent.value.deltaY = deltaY;
+  if (innerTop.value > 93 && touchEvent.value.deltaY > 0) {
+    isOuterActive.value = true;
+    isInnerActive.value = false;
+  }
+  if (outerTop.value === 44 && touchEvent.value.deltaY < 0) {
+    isOuterActive.value = false;
+    isInnerActive.value = true;
+  }
+}
+
+const onSwiper = (swiper: any) => {
+  swiperRef.value = swiper;
+  swiper.on("slideChange", function (event: any) {
+    activeIndex.value = event.activeIndex;
+    console.log(activeIndex.value);
+    segment.value = activeIndex.value.toString()
+  });
+};
+
+function handleInnerScroll() {
+  // console.log(rectangleRef.value.$el);
+  innerTop.value = rectangleRef.value.$el.getBoundingClientRect().top;
+  console.log(innerTop.value);
+  setTimeout(() => {
+    if (innerTop.value > 93) {
+      isOuterActive.value = true;
+      isInnerActive.value = false;
+      console.log(isInnerActive.value);
+    }
+  }, 0);
+}
+
+function handleOuterScroll() {
+  outerTop.value = dividerRef.value.$el.getBoundingClientRect().top;
+  console.log(outerTop.value);
+  if (outerTop.value === 44) {
+    isInnerActive.value = true;
+    isOuterActive.value = false;
+  }
+}
 </script>
 
 <style scoped>
+.PersonalProfileContainer {
+  margin: 2vh 4vw;
+}
 .mineMessage {
+  height: 44px;
   margin: 2vh 4vw;
   display: flex;
   gap: 4vw;
@@ -276,5 +605,43 @@ const dividerRef: any = ref(null);
   width: 88%;
   justify-content: space-evenly;
   margin-bottom: 2vh;
+}
+span {
+  font-weight: 700;
+}
+ion-item-divider {
+  --ion-color-step-100: rgb(10, 10, 10, 1);
+  border-radius: 12px 12px 0 0;
+}
+ion-segment {
+  height: 30px;
+}
+.mineNavContainer {
+  height: 30px;
+  width: 210px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+ion-item-divider {
+  --padding-top: 0.8vh;
+  --padding-bottom: 0.8vh;
+  height: 50px;
+}
+.navButtons {
+  display: flex;
+}
+.swiper {
+  height: fit-content;
+  width: 100%;
+}
+ion-segment-button.ios {
+  --color: #428cff;
+  --color-checked: #fff;
+  --border-radius: 20vw;
+}
+ion-segment-button {
+  --indicator-color: #428cff;
 }
 </style>

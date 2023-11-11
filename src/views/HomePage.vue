@@ -51,42 +51,11 @@
           >
             <div class="anchorFront"></div>
             <newWaterFall :list="list" :waterfallBreakpoints="waterfallBreakpoints"></newWaterFall>
-            <!-- <Waterfall
-              style="background: transparent"
-              :list="list"
-              :breakpoints="waterfallBreakpoints"
-              :animationDelay="100"
-              :delay="-1000"
-              :gutter="8"
-            >
-              <template #item="{ item, url, index }">
-                <div class="card" @click="router.push('/post')">
-                  <LazyImg :url="url" />
-                  <p class="cardText">this is title {{ index }}</p>
-                </div>
-              </template>
-            </Waterfall> -->
             <div ref="anchorEnd"></div>
           </ion-content>
         </swiper-slide>
         <swiper-slide>
-          <ion-content ref="contentRef">
-            <Waterfall
-              style="background: transparent"
-              :list="list"
-              :breakpoints="waterfallBreakpoints"
-              :animationDelay="100"
-              :delay="-1000"
-              :gutter="8"
-            >
-              <template #item="{ item, url, index }">
-                <div class="card">
-                  <LazyImg :url="url" />
-                  <p class="cardText">this is title {{ index }}</p>
-                </div>
-              </template>
-            </Waterfall>
-          </ion-content>
+          <div style="height: 1000px; width: 100%; background-color: aqua"></div>
         </swiper-slide>
       </swiper>
     </ion-content>
@@ -272,6 +241,28 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
+ion-segment{
+  background: rgb(10,10,10,1) ;
+}
+
+  ion-segment-button::part(indicator-background) {
+    background: #428cff;
+    font-weight: 1000;
+
+  }
+  ion-segment-button.ios::part(native) {
+    color: #428cff;
+    font-weight: 1000;
+
+  }
+
+  .segment-button-checked.ios::part(native) {
+    color: #fff;
+  }
+
+  ion-segment-button.ios::part(indicator-background) {
+    border-radius: 20px;
+  }
 .swiper {
   height: 100%;
 }
